@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.1.0 - 2026-01-29
+
+### What's Changed
+
+* build(deps): bump actions/checkout from 5 to 6 by @dependabot[bot] in https://github.com/iRaziul/kotha/pull/1
+
+### New Contributors
+
+* @dependabot[bot] made their first contribution in https://github.com/iRaziul/kotha/pull/1
+
+**Full Changelog**: https://github.com/iRaziul/kotha/compare/v1.0.0...v1.1.0
+
 ## v1.0.0 - 2026-01-29
 
 🎉 First stable release of Kotha
