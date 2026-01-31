@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 final class SslDriver extends AbstractDriver
 {
@@ -28,12 +28,12 @@ final class SslDriver extends AbstractDriver
                 'sid' => $this->config['sender_id'],
                 'msisdn' => implode(',', $this->recipients),
                 'sms' => $this->message,
-                'csms_id' => $this->config['csms_id'] ?? uniqid('kotha_'),
+                'csms_id' => $this->config['csms_id'] ?? uniqid('barta_'),
             ])
             ->json();
 
         if (($response['status'] ?? '') === 'FAILED' || isset($response['error'])) {
-            throw new KothaException($response['error'] ?? $response['status_message'] ?? 'SSL Wireless API error');
+            throw new BartaException($response['error'] ?? $response['status_message'] ?? 'SSL Wireless API error');
         }
 
         return new ResponseData(
@@ -47,11 +47,11 @@ final class SslDriver extends AbstractDriver
         parent::validate();
 
         if (empty($this->config['api_token'])) {
-            throw new KothaException('Please set api_token for SSL Wireless in config/kotha.php.');
+            throw new BartaException('Please set api_token for SSL Wireless in config/barta.php.');
         }
 
         if (empty($this->config['sender_id'])) {
-            throw new KothaException('Please set sender_id for SSL Wireless in config/kotha.php.');
+            throw new BartaException('Please set sender_id for SSL Wireless in config/barta.php.');
         }
     }
 }

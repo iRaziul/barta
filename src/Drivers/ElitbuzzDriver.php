@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 final class ElitbuzzDriver extends AbstractDriver
 {
@@ -28,7 +28,7 @@ final class ElitbuzzDriver extends AbstractDriver
         $body = $response->body();
 
         if (str_contains(mb_strtolower($body), 'error') || str_contains(mb_strtolower($body), 'fail')) {
-            throw new KothaException($body ?: 'ElitBuzz API error');
+            throw new BartaException($body ?: 'ElitBuzz API error');
         }
 
         return new ResponseData(
@@ -42,15 +42,15 @@ final class ElitbuzzDriver extends AbstractDriver
         parent::validate();
 
         if (empty($this->config['url'])) {
-            throw new KothaException('Please set url for ElitBuzz in config/kotha.php.');
+            throw new BartaException('Please set url for ElitBuzz in config/barta.php.');
         }
 
         if (empty($this->config['api_key'])) {
-            throw new KothaException('Please set api_key for ElitBuzz in config/kotha.php.');
+            throw new BartaException('Please set api_key for ElitBuzz in config/barta.php.');
         }
 
         if (empty($this->config['sender_id'])) {
-            throw new KothaException('Please set sender_id for ElitBuzz in config/kotha.php.');
+            throw new BartaException('Please set sender_id for ElitBuzz in config/barta.php.');
         }
     }
 }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Notifications;
+namespace Larament\Barta\Notifications;
 
-final readonly class KothaMessage
+final readonly class BartaMessage
 {
     /**
      * Create a new message instance.

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 final class EsmsDriver extends AbstractDriver
 {
@@ -30,7 +30,7 @@ final class EsmsDriver extends AbstractDriver
             ->json();
 
         if ($response['status'] === 'error') {
-            throw new KothaException($response['message']);
+            throw new BartaException($response['message']);
         }
 
         return new ResponseData(
@@ -44,11 +44,11 @@ final class EsmsDriver extends AbstractDriver
         parent::validate();
 
         if (! $this->config['sender_id']) {
-            throw new KothaException('Please set sender_id for ESMS in config/kotha.php.');
+            throw new BartaException('Please set sender_id for ESMS in config/barta.php.');
         }
 
         if (! $this->config['api_token']) {
-            throw new KothaException('Please set api_token for ESMS in config/kotha.php.');
+            throw new BartaException('Please set api_token for ESMS in config/barta.php.');
         }
     }
 }

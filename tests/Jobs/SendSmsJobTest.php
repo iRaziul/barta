@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Drivers\LogDriver;
-use Larament\Kotha\Facades\Kotha;
-use Larament\Kotha\Jobs\SendSmsJob;
-use Larament\Kotha\KothaManager;
+use Larament\Barta\BartaManager;
+use Larament\Barta\Drivers\LogDriver;
+use Larament\Barta\Facades\Barta;
+use Larament\Barta\Jobs\SendSmsJob;
 
 it('can dispatch sms job to queue', function () {
     Bus::fake();
 
-    Kotha::to('8801700000000')->message('Queued message')->queue();
+    Barta::to('8801700000000')->message('Queued message')->queue();
 
     Bus::assertDispatched(SendSmsJob::class, function ($job) {
         return $job->driver === 'log' &&
@@ -24,7 +24,7 @@ it('can dispatch sms job to queue', function () {
 it('can dispatch bulk sms job to queue', function () {
     Bus::fake();
 
-    Kotha::to(['8801700000000', '8801800000000'])->message('Bulk queued')->queue();
+    Barta::to(['8801700000000', '8801800000000'])->message('Bulk queued')->queue();
 
     Bus::assertDispatched(SendSmsJob::class, function ($job) {
         return $job->recipients === ['8801700000000', '8801800000000'] &&
@@ -35,7 +35,7 @@ it('can dispatch bulk sms job to queue', function () {
 it('can specify custom queue name', function () {
     Bus::fake();
 
-    Kotha::to('8801700000000')->message('Custom queue test')->queue('sms');
+    Barta::to('8801700000000')->message('Custom queue test')->queue('sms');
 
     Bus::assertDispatched(SendSmsJob::class, function ($job) {
         return $job->queue === 'sms';
@@ -45,7 +45,7 @@ it('can specify custom queue name', function () {
 it('can specify custom connection', function () {
     Bus::fake();
 
-    Kotha::to('8801700000000')->message('Custom connection test')->queue(null, 'redis');
+    Barta::to('8801700000000')->message('Custom connection test')->queue(null, 'redis');
 
     Bus::assertDispatched(SendSmsJob::class, function ($job) {
         return $job->connection === 'redis';
@@ -55,7 +55,7 @@ it('can specify custom connection', function () {
 it('can specify both queue and connection', function () {
     Bus::fake();
 
-    Kotha::to('8801700000000')->message('Both options')->queue('sms', 'redis');
+    Barta::to('8801700000000')->message('Both options')->queue('sms', 'redis');
 
     Bus::assertDispatched(SendSmsJob::class, function ($job) {
         return $job->queue === 'sms' && $job->connection === 'redis';
@@ -67,8 +67,8 @@ it('job sends sms when handled', function () {
         'https://login.esms.com.bd/*' => Http::response(['status' => 'success', 'message' => 'SMS Sent'], 200),
     ]);
 
-    config()->set('kotha.drivers.esms.api_token', 'test_token');
-    config()->set('kotha.drivers.esms.sender_id', 'test_sender_id');
+    config()->set('barta.drivers.esms.api_token', 'test_token');
+    config()->set('barta.drivers.esms.sender_id', 'test_sender_id');
 
     $job = new SendSmsJob(
         driver: 'esms',
@@ -76,7 +76,7 @@ it('job sends sms when handled', function () {
         message: 'Job test message',
     );
 
-    $job->handle(app(KothaManager::class));
+    $job->handle(app(BartaManager::class));
 
     Http::assertSent(function ($request) {
         return str_contains($request->url(), 'esms.com.bd') &&
@@ -92,7 +92,7 @@ it('job sends sms with log driver when handled', function () {
         message: 'Log driver job test',
     );
 
-    $manager = app(KothaManager::class);
+    $manager = app(BartaManager::class);
 
     // Should not throw exception
     $job->handle($manager);

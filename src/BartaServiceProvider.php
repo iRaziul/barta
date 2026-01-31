@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha;
+namespace Larament\Barta;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
-use Larament\Kotha\Commands\InstallKothaCommand;
-use Larament\Kotha\Notifications\KothaChannel;
+use Larament\Barta\Commands\InstallBartaCommand;
+use Larament\Barta\Notifications\BartaChannel;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class KothaServiceProvider extends PackageServiceProvider
+class BartaServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('kotha')
+            ->name('barta')
             ->hasConfigFile()
-            ->hasCommand(InstallKothaCommand::class);
+            ->hasCommand(InstallBartaCommand::class);
 
         $this->app->singleton(
-            KothaManager::class,
-            fn (Container $container) => new KothaManager($container)
+            BartaManager::class,
+            fn (Container $container) => new BartaManager($container)
         );
 
         Notification::resolved(function (ChannelManager $channel): void {
-            $channel->extend('kotha', fn ($app) => $app->make(KothaChannel::class));
+            $channel->extend('barta', fn ($app) => $app->make(BartaChannel::class));
         });
     }
 }

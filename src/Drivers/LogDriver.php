@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Log;
-use Larament\Kotha\Data\ResponseData;
+use Larament\Barta\Data\ResponseData;
 
 class LogDriver extends AbstractDriver
 {
@@ -13,7 +13,7 @@ class LogDriver extends AbstractDriver
     {
         $this->validate();
 
-        Log::info('[KOTHA] Message sent', [
+        Log::info('[BARTA] Message sent', [
             'recipients' => $this->recipients,
             'message' => $this->message,
         ]);

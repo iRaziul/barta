@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Notifications\KothaChannel;
-use Larament\Kotha\Notifications\KothaMessage;
+use Larament\Barta\Notifications\BartaChannel;
+use Larament\Barta\Notifications\BartaMessage;
 
 class TestNotifiable
 {
@@ -14,7 +14,7 @@ class TestNotifiable
 
     public string $phone = '8801712345678';
 
-    public function routeNotificationForKotha(): string
+    public function routeNotificationForBarta(): string
     {
         return $this->phone;
     }
@@ -22,38 +22,38 @@ class TestNotifiable
 
 class TestNotification extends Notification
 {
-    public function toKotha(): KothaMessage
+    public function toBarta(): BartaMessage
     {
-        return new KothaMessage('This is a test notification message.');
+        return new BartaMessage('This is a test notification message.');
     }
 }
 
 class TestNotificationWithCustomDriver extends Notification
 {
-    public function toKotha(): KothaMessage
+    public function toBarta(): BartaMessage
     {
-        return new KothaMessage('Custom driver notification.');
+        return new BartaMessage('Custom driver notification.');
     }
 
-    public function kothaDriver(): string
+    public function bartaDriver(): string
     {
         return 'log';
     }
 }
 
-it('can send a notification via Kotha channel', function () {
+it('can send a notification via Barta channel', function () {
     Http::fake([
         'https://login.esms.com.bd/*' => Http::response(['status' => 'success', 'message' => 'SMS Sent'], 200),
     ]);
 
-    config()->set('kotha.default', 'esms');
-    config()->set('kotha.drivers.esms.api_token', 'test_token');
-    config()->set('kotha.drivers.esms.sender_id', 'test_sender_id');
+    config()->set('barta.default', 'esms');
+    config()->set('barta.drivers.esms.api_token', 'test_token');
+    config()->set('barta.drivers.esms.sender_id', 'test_sender_id');
 
     $notifiable = new TestNotifiable;
     $notification = new TestNotification;
 
-    (new KothaChannel)->send($notifiable, $notification);
+    (new BartaChannel)->send($notifiable, $notification);
 
     Http::assertSent(function ($request) use ($notifiable) {
         return str_contains($request->url(), 'esms.com.bd') &&
@@ -68,15 +68,15 @@ it('can send a notification via Kotha channel', function () {
 it('does not send notification if route is empty', function () {
     Http::fake();
 
-    config()->set('kotha.default', 'esms');
-    config()->set('kotha.drivers.esms.api_token', 'test_token');
-    config()->set('kotha.drivers.esms.sender_id', 'test_sender_id');
+    config()->set('barta.default', 'esms');
+    config()->set('barta.drivers.esms.api_token', 'test_token');
+    config()->set('barta.drivers.esms.sender_id', 'test_sender_id');
 
     $notifiable = new class
     {
         use Notifiable;
 
-        public function routeNotificationForKotha(): ?string
+        public function routeNotificationForBarta(): ?string
         {
             return null;
         }
@@ -84,19 +84,19 @@ it('does not send notification if route is empty', function () {
 
     $notification = new TestNotification;
 
-    (new KothaChannel)->send($notifiable, $notification);
+    (new BartaChannel)->send($notifiable, $notification);
 
     Http::assertNothingSent();
 });
 
-it('can send notification with custom driver specified via kothaDriver method', function () {
-    config()->set('kotha.default', 'esms');
+it('can send notification with custom driver specified via bartaDriver method', function () {
+    config()->set('barta.default', 'esms');
 
     $notifiable = new TestNotifiable;
     $notification = new TestNotificationWithCustomDriver;
 
-    // Should use log driver instead of esms because kothaDriver() returns 'log'
-    (new KothaChannel)->send($notifiable, $notification);
+    // Should use log driver instead of esms because bartaDriver() returns 'log'
+    (new BartaChannel)->send($notifiable, $notification);
 
     // No HTTP request should be made since log driver is used
     Http::assertNothingSent();
@@ -107,23 +107,23 @@ it('can send notification through Laravel notification system', function () {
         'https://login.esms.com.bd/*' => Http::response(['status' => 'success', 'message' => 'SMS Sent'], 200),
     ]);
 
-    config()->set('kotha.default', 'esms');
-    config()->set('kotha.drivers.esms.api_token', 'test_token');
-    config()->set('kotha.drivers.esms.sender_id', 'test_sender_id');
+    config()->set('barta.default', 'esms');
+    config()->set('barta.drivers.esms.api_token', 'test_token');
+    config()->set('barta.drivers.esms.sender_id', 'test_sender_id');
 
     $notifiable = new TestNotifiable;
 
-    // Create a notification that uses the 'kotha' channel via Laravel's system
+    // Create a notification that uses the 'barta' channel via Laravel's system
     $notification = new class extends Notification
     {
         public function via($notifiable): array
         {
-            return ['kotha'];
+            return ['barta'];
         }
 
-        public function toKotha($notifiable): KothaMessage
+        public function toBarta($notifiable): BartaMessage
         {
-            return new KothaMessage('Laravel notification system test');
+            return new BartaMessage('Laravel notification system test');
         }
     };
 

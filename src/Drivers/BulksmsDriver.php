@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 final class BulksmsDriver extends AbstractDriver
 {
@@ -29,7 +29,7 @@ final class BulksmsDriver extends AbstractDriver
             ->json();
 
         if (($response['response_code'] ?? 0) !== 202) {
-            throw new KothaException($response['error_message'] ?? 'BulkSMS BD API error');
+            throw new BartaException($response['error_message'] ?? 'BulkSMS BD API error');
         }
 
         return new ResponseData(success: true, data: $response);
@@ -40,10 +40,10 @@ final class BulksmsDriver extends AbstractDriver
         parent::validate();
 
         if (empty($this->config['api_key'])) {
-            throw new KothaException('Please set api_key for BulkSMS in config/kotha.php.');
+            throw new BartaException('Please set api_key for BulkSMS in config/barta.php.');
         }
         if (empty($this->config['sender_id'])) {
-            throw new KothaException('Please set sender_id for BulkSMS in config/kotha.php.');
+            throw new BartaException('Please set sender_id for BulkSMS in config/barta.php.');
         }
     }
 }

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Support\Str;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
-use Larament\Kotha\Jobs\SendSmsJob;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
+use Larament\Barta\Jobs\SendSmsJob;
 
 abstract class AbstractDriver
 {
@@ -28,9 +28,9 @@ abstract class AbstractDriver
     public function __construct(
         protected array $config = [],
     ) {
-        $this->timeout = config()->integer('kotha.request.timeout');
-        $this->retry = config()->integer('kotha.request.retry');
-        $this->retryDelay = config()->integer('kotha.request.retry_delay');
+        $this->timeout = config()->integer('barta.request.timeout');
+        $this->retry = config()->integer('barta.request.retry');
+        $this->retryDelay = config()->integer('barta.request.retry_delay');
     }
 
     /**
@@ -113,7 +113,7 @@ abstract class AbstractDriver
             ->toString();
 
         if (! preg_match('/^8801[3-9][0-9]{8}$/', $phone)) {
-            throw KothaException::invalidNumber($number);
+            throw BartaException::invalidNumber($number);
         }
 
         return $phone;
@@ -125,11 +125,11 @@ abstract class AbstractDriver
     protected function validate(): void
     {
         if (empty($this->recipients)) {
-            throw KothaException::missingRecipient();
+            throw BartaException::missingRecipient();
         }
 
         if (empty($this->message)) {
-            throw KothaException::missingMessage();
+            throw BartaException::missingMessage();
         }
     }
 }

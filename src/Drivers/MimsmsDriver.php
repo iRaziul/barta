@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 final class MimsmsDriver extends AbstractDriver
 {
@@ -32,7 +32,7 @@ final class MimsmsDriver extends AbstractDriver
             ->json();
 
         if ((int) $response['statusCode'] !== 200) {
-            throw new KothaException($response['responseResult']);
+            throw new BartaException($response['responseResult']);
         }
 
         return new ResponseData(
@@ -46,15 +46,15 @@ final class MimsmsDriver extends AbstractDriver
         parent::validate();
 
         if (! $this->config['username']) {
-            throw new KothaException('Please set username for Mimsms in config/kotha.php.');
+            throw new BartaException('Please set username for Mimsms in config/barta.php.');
         }
 
         if (! $this->config['api_key']) {
-            throw new KothaException('Please set api_key for Mimsms in config/kotha.php.');
+            throw new BartaException('Please set api_key for Mimsms in config/barta.php.');
         }
 
         if (! $this->config['sender_id']) {
-            throw new KothaException('Please set sender_id for Mimsms in config/kotha.php.');
+            throw new BartaException('Please set sender_id for Mimsms in config/barta.php.');
         }
     }
 }

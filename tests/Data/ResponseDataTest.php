@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Larament\Kotha\Data\ResponseData;
+use Larament\Barta\Data\ResponseData;
 
 it('can create a response data object', function () {
     $response = new ResponseData(

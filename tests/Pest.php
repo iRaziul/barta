@@ -1,5 +1,5 @@
 <?php
 
-use Larament\Kotha\Tests\TestCase;
+use Larament\Barta\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

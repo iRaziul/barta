@@ -3,17 +3,17 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Drivers\AdnsmsDriver;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Drivers\AdnsmsDriver;
+use Larament\Barta\Exceptions\BartaException;
 
 beforeEach(function () {
-    config()->set('kotha.drivers.adnsms.api_key', 'test_key');
-    config()->set('kotha.drivers.adnsms.api_secret', 'test_secret');
+    config()->set('barta.drivers.adnsms.api_key', 'test_key');
+    config()->set('barta.drivers.adnsms.api_secret', 'test_secret');
 });
 
 it('can instantiate the adn driver', function () {
-    $driver = new AdnsmsDriver(config('kotha.drivers.adnsms'));
+    $driver = new AdnsmsDriver(config('barta.drivers.adnsms'));
     expect($driver)->toBeInstanceOf(AdnsmsDriver::class);
 });
 
@@ -22,7 +22,7 @@ it('sends sms successfully with adn driver', function () {
         'https://portal.adnsms.com/*' => Http::response(['api_response_code' => 200, 'api_response_message' => 'Success'], 200),
     ]);
 
-    $driver = new AdnsmsDriver(config('kotha.drivers.adnsms'));
+    $driver = new AdnsmsDriver(config('barta.drivers.adnsms'));
     $response = $driver->to('8801700000000')->message('Test message')->send();
 
     expect($response)->toBeInstanceOf(ResponseData::class);
@@ -34,20 +34,20 @@ it('throws exception on adn api error', function () {
         '*' => Http::response(['api_response_code' => 401, 'api_response_message' => 'Invalid API Key'], 200),
     ]);
 
-    $driver = new AdnsmsDriver(config('kotha.drivers.adnsms'));
+    $driver = new AdnsmsDriver(config('barta.drivers.adnsms'));
     $driver->to('8801700000000')->message('Test')->send();
-})->throws(KothaException::class, 'Invalid API Key');
+})->throws(BartaException::class, 'Invalid API Key');
 
 it('throws exception if api_key missing', function () {
-    config()->set('kotha.drivers.adnsms.api_key', null);
+    config()->set('barta.drivers.adnsms.api_key', null);
 
-    $driver = new AdnsmsDriver(config('kotha.drivers.adnsms'));
+    $driver = new AdnsmsDriver(config('barta.drivers.adnsms'));
     $driver->to('8801700000000')->message('Test')->send();
-})->throws(KothaException::class, 'api_key');
+})->throws(BartaException::class, 'api_key');
 
 it('throws exception if api_secret missing', function () {
-    config()->set('kotha.drivers.adnsms.api_secret', null);
+    config()->set('barta.drivers.adnsms.api_secret', null);
 
-    $driver = new AdnsmsDriver(config('kotha.drivers.adnsms'));
+    $driver = new AdnsmsDriver(config('barta.drivers.adnsms'));
     $driver->to('8801700000000')->message('Test')->send();
-})->throws(KothaException::class, 'api_secret');
+})->throws(BartaException::class, 'api_secret');

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 final class GreenwebDriver extends AbstractDriver
 {
@@ -29,7 +29,7 @@ final class GreenwebDriver extends AbstractDriver
             ->json();
 
         if (isset($response['error']) || (isset($response[0]) && str_contains($response[0], 'Error'))) {
-            throw new KothaException($response['error'] ?? $response[0] ?? 'GreenWeb API error');
+            throw new BartaException($response['error'] ?? $response[0] ?? 'GreenWeb API error');
         }
 
         return new ResponseData(
@@ -43,7 +43,7 @@ final class GreenwebDriver extends AbstractDriver
         parent::validate();
 
         if (empty($this->config['token'])) {
-            throw new KothaException('Please set token for GreenWeb in config/kotha.php.');
+            throw new BartaException('Please set token for GreenWeb in config/barta.php.');
         }
     }
 }

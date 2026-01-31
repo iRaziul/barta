@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Commands;
+namespace Larament\Barta\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Laravel\Prompts\confirm;
 
-#[AsCommand(name: 'kotha:install', description: 'Install the Kotha package and publish the configuration')]
-final class InstallKothaCommand extends Command
+#[AsCommand(name: 'barta:install', description: 'Install the Barta package and publish the configuration')]
+final class InstallBartaCommand extends Command
 {
     public function handle(): int
     {
         $this->publishConfigs();
 
-        $this->askToStarRepo('iRaziul/kotha');
+        $this->askToStarRepo('iRaziul/barta');
 
         return self::SUCCESS;
     }
@@ -24,7 +24,7 @@ final class InstallKothaCommand extends Command
     private function publishConfigs(): void
     {
         $this->call('vendor:publish', [
-            '--tag' => 'kotha-config',
+            '--tag' => 'barta-config',
         ]);
     }
 

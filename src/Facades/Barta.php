@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Facades;
+namespace Larament\Barta\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Larament\Kotha\KothaManager;
+use Larament\Barta\BartaManager;
 
 /**
  * @method static self to(string $number)
  * @method static self message(string $message)
- * @method static \Larament\Kotha\Data\ResponseData send()
+ * @method static \Larament\Barta\Data\ResponseData send()
  * @method static self driver(?string $driver)
  *
- * @see KothaManager
+ * @see BartaManager
  */
-class Kotha extends Facade
+class Barta extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return KothaManager::class;
+        return BartaManager::class;
     }
 }

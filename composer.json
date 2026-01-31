@@ -1,12 +1,24 @@
 {
-    "name": "larament/kotha",
-    "description": "Kotha is a Laravel package designed to integrate popular Bangladeshi SMS gateways seamlessly.",
+    "name": "larament/barta",
+    "description": "Barta is a Laravel package designed to integrate popular Bangladeshi SMS gateways seamlessly.",
     "keywords": [
-        "kotha",
+        "barta",
         "sms",
-        "bangladesh"
+        "bangladesh",
+        "sms gateway",
+        "sms api",
+        "sms service",
+        "sms provider",
+        "sms notification",
+        "sms sender",
+        "sms gateway bangladesh",
+        "sms api bangladesh",
+        "sms service bangladesh",
+        "sms provider bangladesh",
+        "sms notification bangladesh",
+        "sms sender bangladesh"
     ],
-    "homepage": "https://github.com/iRaziul/kotha",
+    "homepage": "https://github.com/iRaziul/barta",
     "license": "MIT",
     "authors": [
         {
@@ -34,12 +46,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Larament\\Kotha\\": "src/"
+            "Larament\\Barta\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Larament\\Kotha\\Tests\\": "tests/",
+            "Larament\\Barta\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -61,10 +73,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Larament\\Kotha\\KothaServiceProvider"
+                "Larament\\Barta\\BartaServiceProvider"
             ],
             "aliases": {
-                "Kotha": "Larament\\Kotha\\Facades\\Kotha"
+                "Barta": "Larament\\Barta\\Facades\\Barta"
             }
         }
     },

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 final class AdnsmsDriver extends AbstractDriver
 {
@@ -33,7 +33,7 @@ final class AdnsmsDriver extends AbstractDriver
             ->json();
 
         if (($response['api_response_code'] ?? 0) !== 200) {
-            throw new KothaException($response['api_response_message'] ?? 'ADN SMS API error');
+            throw new BartaException($response['api_response_message'] ?? 'ADN SMS API error');
         }
 
         return new ResponseData(
@@ -47,11 +47,11 @@ final class AdnsmsDriver extends AbstractDriver
         parent::validate();
 
         if (empty($this->config['api_key'])) {
-            throw new KothaException('Please set api_key for ADN in config/kotha.php.');
+            throw new BartaException('Please set api_key for ADN in config/barta.php.');
         }
 
         if (empty($this->config['api_secret'])) {
-            throw new KothaException('Please set api_secret for ADN in config/kotha.php.');
+            throw new BartaException('Please set api_secret for ADN in config/barta.php.');
         }
     }
 }

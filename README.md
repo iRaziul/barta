@@ -1,22 +1,22 @@
 <div align="center">
-<a href="https://github.com/iRaziul/kotha">
-<img src="https://raw.githubusercontent.com/iRaziul/kotha/main/.github/assets/banner.svg" alt="Kotha Banner">
+<a href="https://github.com/iRaziul/barta">
+<img src="https://raw.githubusercontent.com/iRaziul/barta/main/.github/assets/banner.svg" alt="Barta Banner">
 </a>
 <br>
-<h1>Kotha (কথা)</h1>
+<h1>Barta (কথা)</h1>
 <p>
     <strong>The unified interface for every Bangladeshi SMS gateway.</strong>
 </p>
 <p>
-Kotha is a clean, expressive Laravel package designed to integrate popular Bangladeshi SMS gateways seamlessly. Whether you're sending OTPs, marketing alerts, or notifications, Kotha makes the process as simple as a conversation.
+Barta is a clean, expressive Laravel package designed to integrate popular Bangladeshi SMS gateways seamlessly. Whether you're sending OTPs, marketing alerts, or notifications, Barta makes the process as simple as a conversation.
 </p>
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/larament/kotha.svg?style=flat-square)](https://packagist.org/packages/larament/kotha)
-[![Total Downloads](https://img.shields.io/packagist/dt/larament/kotha.svg?style=flat-square)](https://packagist.org/packages/larament/kotha)
-[![Run Tests](https://github.com/iRaziul/kotha/actions/workflows/run-tests.yml/badge.svg)](https://github.com/iRaziul/kotha/actions/workflows/run-tests.yml)
-[![PHPStan](https://github.com/iRaziul/kotha/actions/workflows/phpstan.yml/badge.svg)](https://github.com/iRaziul/kotha/actions/workflows/phpstan.yml)
-[![Pint](https://github.com/iRaziul/kotha/actions/workflows/fix-php-code-style-issues.yml/badge.svg)](https://github.com/iRaziul/kotha/actions/workflows/fix-php-code-style-issues.yml)
-[![License](https://img.shields.io/github/license/iRaziul/kotha.svg?style=flat-square)](https://github.com/iRaziul/kotha/blob/main/LICENSE.md)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/larament/barta.svg?style=flat-square)](https://packagist.org/packages/larament/barta)
+[![Total Downloads](https://img.shields.io/packagist/dt/larament/barta.svg?style=flat-square)](https://packagist.org/packages/larament/barta)
+[![Run Tests](https://github.com/iRaziul/barta/actions/workflows/run-tests.yml/badge.svg)](https://github.com/iRaziul/barta/actions/workflows/run-tests.yml)
+[![PHPStan](https://github.com/iRaziul/barta/actions/workflows/phpstan.yml/badge.svg)](https://github.com/iRaziul/barta/actions/workflows/phpstan.yml)
+[![Pint](https://github.com/iRaziul/barta/actions/workflows/fix-php-code-style-issues.yml/badge.svg)](https://github.com/iRaziul/barta/actions/workflows/fix-php-code-style-issues.yml)
+[![License](https://img.shields.io/github/license/iRaziul/barta.svg?style=flat-square)](https://github.com/iRaziul/barta/blob/main/LICENSE.md)
 
 </div>
 
@@ -49,7 +49,7 @@ Kotha is a clean, expressive Laravel package designed to integrate popular Bangl
 | [BulkSMS BD](https://bulksmsbd.net)     | `bulksms`      | ✅ Supported |
 | [ElitBuzz](https://elitbuzz.com)        | `elitbuzz`     | ✅ Supported |
 
-> **Want more gateways?** [Request a gateway](https://github.com/iRaziul/kotha/issues) or [contribute a driver](#-creating-custom-drivers).
+> **Want more gateways?** [Request a gateway](https://github.com/iRaziul/barta/issues) or [contribute a driver](#-creating-custom-drivers).
 
 ---
 
@@ -58,13 +58,13 @@ Kotha is a clean, expressive Laravel package designed to integrate popular Bangl
 Install via Composer:
 
 ```bash
-composer require larament/kotha
+composer require larament/barta
 ```
 
 Run the install command (publishes config + optional setup):
 
 ```bash
-php artisan kotha:install
+php artisan barta:install
 ```
 
 ---
@@ -74,14 +74,14 @@ php artisan kotha:install
 Set your default driver and add credentials to `.env`:
 
 ```env
-KOTHA_DRIVER=ssl
+BARTA_DRIVER=ssl
 
 # Example: SSL Wireless
-KOTHA_SSL_TOKEN=your-api-token
-KOTHA_SSL_SENDER_ID=your-sender-id
+BARTA_SSL_TOKEN=your-api-token
+BARTA_SSL_SENDER_ID=your-sender-id
 ```
 
-Each gateway requires different credentials. See [`config/kotha.php`](config/kotha.php) for all available options and environment variable names.
+Each gateway requires different credentials. See [`config/barta.php`](config/barta.php) for all available options and environment variable names.
 
 > 💡 **Tip:** Use `log` driver during development to avoid sending real SMS.
 
@@ -92,10 +92,10 @@ Each gateway requires different credentials. See [`config/kotha.php`](config/kot
 ### Basic Usage
 
 ```php
-use Larament\Kotha\Facades\Kotha;
+use Larament\Barta\Facades\Barta;
 
 // Send SMS using the default driver
-Kotha::to('01712345678')
+Barta::to('01712345678')
     ->message('Your OTP is 1234')
     ->send();
 ```
@@ -104,7 +104,7 @@ Kotha::to('01712345678')
 
 ```php
 // Use a specific gateway
-Kotha::driver('esms')
+Barta::driver('esms')
     ->to('01712345678')
     ->message('Hello from eSMS!')
     ->send();
@@ -115,7 +115,7 @@ Kotha::driver('esms')
 Send to multiple recipients in a single API call:
 
 ```php
-Kotha::to(['01712345678', '01812345678', '01912345678'])
+Barta::to(['01712345678', '01812345678', '01912345678'])
     ->message('Hello everyone!')
     ->send();
 ```
@@ -123,7 +123,7 @@ Kotha::to(['01712345678', '01812345678', '01912345678'])
 ### Getting the Response
 
 ```php
-$response = Kotha::to('01712345678')
+$response = Barta::to('01712345678')
     ->message('Hello!')
     ->send();
 
@@ -146,22 +146,22 @@ Dispatch SMS to your queue for background processing:
 
 ```php
 // Queue with default settings
-Kotha::to('01712345678')
+Barta::to('01712345678')
     ->message('This will be queued')
     ->queue();
 
 // Specify queue name
-Kotha::to('01712345678')
+Barta::to('01712345678')
     ->message('Priority message')
     ->queue('sms');
 
 // Specify connection and queue
-Kotha::to('01712345678')
+Barta::to('01712345678')
     ->message('Redis queue')
     ->queue('sms', 'redis');
 
 // Bulk queued SMS
-Kotha::to(['01712345678', '01812345678'])
+Barta::to(['01712345678', '01812345678'])
     ->message('Queued bulk message')
     ->queue();
 ```
@@ -170,24 +170,24 @@ Kotha::to(['01712345678', '01812345678'])
 
 ## 🔔 Laravel Notifications
 
-Kotha integrates seamlessly with Laravel's notification system.
+Barta integrates seamlessly with Laravel's notification system.
 
 ### 1. Create a Notification
 
 ```php
 use Illuminate\Notifications\Notification;
-use Larament\Kotha\Notifications\KothaMessage;
+use Larament\Barta\Notifications\BartaMessage;
 
 class OrderShipped extends Notification
 {
     public function via($notifiable): array
     {
-        return ['kotha'];
+        return ['barta'];
     }
 
-    public function toKotha($notifiable): KothaMessage
+    public function toBarta($notifiable): BartaMessage
     {
-        return new KothaMessage(
+        return new BartaMessage(
             "Hi {$notifiable->name}, your order has been shipped!"
         );
     }
@@ -198,7 +198,7 @@ class OrderShipped extends Notification
 
 ```php
 // app/Models/User.php
-public function routeNotificationForKotha($notification): string
+public function routeNotificationForBarta($notification): string
 {
     return $this->phone;
 }
@@ -217,13 +217,13 @@ Override the default driver per notification:
 ```php
 class OrderShipped extends Notification
 {
-    public function toKotha($notifiable): KothaMessage
+    public function toBarta($notifiable): BartaMessage
     {
-        return new KothaMessage('Your order shipped!');
+        return new BartaMessage('Your order shipped!');
     }
 
     // Optional: specify driver for this notification
-    public function kothaDriver(): string
+    public function bartaDriver(): string
     {
         return 'mimsms';
     }
@@ -234,7 +234,7 @@ class OrderShipped extends Notification
 
 ## 🔧 Creating Custom Drivers
 
-Extend Kotha to support any SMS gateway.
+Extend Barta to support any SMS gateway.
 
 ### 1. Create the Driver Class
 
@@ -242,9 +242,9 @@ Extend Kotha to support any SMS gateway.
 namespace App\Sms\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Drivers\AbstractDriver;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Drivers\AbstractDriver;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 class CustomGatewayDriver extends AbstractDriver
 {
@@ -261,7 +261,7 @@ class CustomGatewayDriver extends AbstractDriver
             ->json();
 
         if ($response['status'] !== 'success') {
-            throw new KothaException($response['error']);
+            throw new BartaException($response['error']);
         }
 
         return new ResponseData(
@@ -277,12 +277,12 @@ class CustomGatewayDriver extends AbstractDriver
 ```php
 // app/Providers/AppServiceProvider.php
 use App\Sms\Drivers\CustomGatewayDriver;
-use Larament\Kotha\Facades\Kotha;
+use Larament\Barta\Facades\Barta;
 
 public function boot(): void
 {
-    Kotha::extend('custom', function ($app) {
-        return new CustomGatewayDriver(config('kotha.drivers.custom'));
+    Barta::extend('custom', function ($app) {
+        return new CustomGatewayDriver(config('barta.drivers.custom'));
     });
 }
 ```
@@ -290,7 +290,7 @@ public function boot(): void
 ### 3. Add Configuration
 
 ```php
-// config/kotha.php
+// config/barta.php
 'drivers' => [
     // ...existing drivers...
 
@@ -304,7 +304,7 @@ public function boot(): void
 ### 4. Use Your Driver
 
 ```php
-Kotha::driver('custom')
+Barta::driver('custom')
     ->to('01712345678')
     ->message('Hello from custom gateway!')
     ->send();
@@ -314,7 +314,7 @@ Kotha::driver('custom')
 
 ## 📞 Phone Number Formatting
 
-Kotha automatically normalizes Bangladeshi phone numbers to the `8801XXXXXXXXX` format:
+Barta automatically normalizes Bangladeshi phone numbers to the `8801XXXXXXXXX` format:
 
 | Input            | Output          |
 | ---------------- | --------------- |
@@ -324,7 +324,7 @@ Kotha automatically normalizes Bangladeshi phone numbers to the `8801XXXXXXXXX` 
 | `+8801712345678` | `8801712345678` |
 | `017-1234-5678`  | `8801712345678` |
 
-Invalid numbers will throw a `KothaException`.
+Invalid numbers will throw a `BartaException`.
 
 ---
 
@@ -347,7 +347,7 @@ Use the `log` driver during testing to avoid sending real SMS:
 
 ```php
 // phpunit.xml or .env.testing
-KOTHA_DEFAULT_DRIVER=log
+BARTA_DEFAULT_DRIVER=log
 ```
 
 ---
@@ -378,6 +378,6 @@ The MIT License (MIT). Please see [LICENSE.md](LICENSE.md) for more information.
 <div align="center">
 <p>Made with ❤️ for the Bangladeshi Laravel Community</p>
 <p>
-<a href="https://github.com/iRaziul/kotha/stargazers">⭐ Star us on GitHub</a>
+<a href="https://github.com/iRaziul/barta/stargazers">⭐ Star us on GitHub</a>
 </p>
 </div>

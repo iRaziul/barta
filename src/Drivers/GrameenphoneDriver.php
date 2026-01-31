@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 final class GrameenphoneDriver extends AbstractDriver
 {
@@ -37,7 +37,7 @@ final class GrameenphoneDriver extends AbstractDriver
         $statusCode = $response['statusCode'] ?? null;
 
         if ($statusCode !== 200 && $statusCode !== '200') {
-            throw new KothaException($response['statusDescription'] ?? 'Grameenphone API error');
+            throw new BartaException($response['statusDescription'] ?? 'Grameenphone API error');
         }
 
         return new ResponseData(
@@ -51,11 +51,11 @@ final class GrameenphoneDriver extends AbstractDriver
         parent::validate();
 
         if (empty($this->config['username'])) {
-            throw new KothaException('Please set username for Grameenphone in config/kotha.php.');
+            throw new BartaException('Please set username for Grameenphone in config/barta.php.');
         }
 
         if (empty($this->config['password'])) {
-            throw new KothaException('Please set password for Grameenphone in config/kotha.php.');
+            throw new BartaException('Please set password for Grameenphone in config/barta.php.');
         }
     }
 }

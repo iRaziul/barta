@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 final class BanglalinkDriver extends AbstractDriver
 {
@@ -32,7 +32,7 @@ final class BanglalinkDriver extends AbstractDriver
 
         // Banglalink returns XML/text response
         if (str_contains(mb_strtolower($body), 'error') || str_contains(mb_strtolower($body), 'fail')) {
-            throw new KothaException($body ?: 'Banglalink API error');
+            throw new BartaException($body ?: 'Banglalink API error');
         }
 
         return new ResponseData(
@@ -46,15 +46,15 @@ final class BanglalinkDriver extends AbstractDriver
         parent::validate();
 
         if (empty($this->config['user_id'])) {
-            throw new KothaException('Please set user_id for Banglalink in config/kotha.php.');
+            throw new BartaException('Please set user_id for Banglalink in config/barta.php.');
         }
 
         if (empty($this->config['password'])) {
-            throw new KothaException('Please set password for Banglalink in config/kotha.php.');
+            throw new BartaException('Please set password for Banglalink in config/barta.php.');
         }
 
         if (empty($this->config['sender_id'])) {
-            throw new KothaException('Please set sender_id for Banglalink in config/kotha.php.');
+            throw new BartaException('Please set sender_id for Banglalink in config/barta.php.');
         }
     }
 }

@@ -3,23 +3,23 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Drivers\MimsmsDriver;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Drivers\MimsmsDriver;
+use Larament\Barta\Exceptions\BartaException;
 
 beforeEach(function () {
-    config()->set('kotha.drivers.mimsms.username', 'test_user');
-    config()->set('kotha.drivers.mimsms.api_key', 'test_key');
-    config()->set('kotha.drivers.mimsms.sender_id', 'test_sender_id');
+    config()->set('barta.drivers.mimsms.username', 'test_user');
+    config()->set('barta.drivers.mimsms.api_key', 'test_key');
+    config()->set('barta.drivers.mimsms.sender_id', 'test_sender_id');
 });
 
 it('can instantiate the mimsms driver', function () {
-    $driver = new MimsmsDriver(config('kotha.drivers.mimsms'));
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
     expect($driver)->toBeInstanceOf(MimsmsDriver::class);
 });
 
 it('can set recipient and message for mimsms driver', function () {
-    $driver = new MimsmsDriver(config('kotha.drivers.mimsms'));
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
 
     expect($driver->to('8801700000000'))->toBeInstanceOf(MimsmsDriver::class);
     expect($driver->message('Test message'))->toBeInstanceOf(MimsmsDriver::class);
@@ -30,7 +30,7 @@ it('sends sms successfully with mimsms driver', function () {
         'https://api.mimsms.com/*' => Http::response(['statusCode' => 200, 'responseResult' => 'Success'], 200),
     ]);
 
-    $driver = new MimsmsDriver(config('kotha.drivers.mimsms'));
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
     $response = $driver->to('8801700000000')->message('Test message')->send();
 
     expect($response)->toBeInstanceOf(ResponseData::class);
@@ -53,7 +53,7 @@ it('sends bulk sms successfully with mimsms driver', function () {
         'https://api.mimsms.com/*' => Http::response(['statusCode' => 200, 'responseResult' => 'Success'], 200),
     ]);
 
-    $driver = new MimsmsDriver(config('kotha.drivers.mimsms'));
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
     $response = $driver->to(['8801700000000', '8801800000000'])->message('Bulk test')->send();
 
     expect($response)->toBeInstanceOf(ResponseData::class);
@@ -64,32 +64,32 @@ it('sends bulk sms successfully with mimsms driver', function () {
     });
 });
 
-it('throws KothaException on mimsms api error', function () {
+it('throws BartaException on mimsms api error', function () {
     Http::fake([
         'https://api.mimsms.com/*' => Http::response(['statusCode' => 401, 'responseResult' => 'Invalid credentials'], 200),
     ]);
 
-    $driver = new MimsmsDriver(config('kotha.drivers.mimsms'));
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
     $driver->to('8801700000000')->message('Test message')->send();
-})->throws(KothaException::class, 'Invalid credentials');
+})->throws(BartaException::class, 'Invalid credentials');
 
-it('throws KothaException if username is missing for mimsms driver', function () {
-    config()->set('kotha.drivers.mimsms.username', null);
+it('throws BartaException if username is missing for mimsms driver', function () {
+    config()->set('barta.drivers.mimsms.username', null);
 
-    $driver = new MimsmsDriver(config('kotha.drivers.mimsms'));
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
     $driver->to('8801700000000')->message('Test message')->send();
-})->throws(KothaException::class, 'Please set username for Mimsms in config/kotha.php.');
+})->throws(BartaException::class, 'Please set username for Mimsms in config/barta.php.');
 
-it('throws KothaException if api_key is missing for mimsms driver', function () {
-    config()->set('kotha.drivers.mimsms.api_key', null);
+it('throws BartaException if api_key is missing for mimsms driver', function () {
+    config()->set('barta.drivers.mimsms.api_key', null);
 
-    $driver = new MimsmsDriver(config('kotha.drivers.mimsms'));
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
     $driver->to('8801700000000')->message('Test message')->send();
-})->throws(KothaException::class, 'Please set api_key for Mimsms in config/kotha.php.');
+})->throws(BartaException::class, 'Please set api_key for Mimsms in config/barta.php.');
 
-it('throws KothaException if sender_id is missing for mimsms driver', function () {
-    config()->set('kotha.drivers.mimsms.sender_id', null);
+it('throws BartaException if sender_id is missing for mimsms driver', function () {
+    config()->set('barta.drivers.mimsms.sender_id', null);
 
-    $driver = new MimsmsDriver(config('kotha.drivers.mimsms'));
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
     $driver->to('8801700000000')->message('Test message')->send();
-})->throws(KothaException::class, 'Please set sender_id for Mimsms in config/kotha.php.');
+})->throws(BartaException::class, 'Please set sender_id for Mimsms in config/barta.php.');

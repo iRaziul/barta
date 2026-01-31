@@ -3,19 +3,19 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Drivers\InfobipDriver;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Drivers\InfobipDriver;
+use Larament\Barta\Exceptions\BartaException;
 
 beforeEach(function () {
-    config()->set('kotha.drivers.infobip.base_url', 'https://api.infobip.com');
-    config()->set('kotha.drivers.infobip.username', 'test_user');
-    config()->set('kotha.drivers.infobip.password', 'test_pass');
-    config()->set('kotha.drivers.infobip.sender_id', 'test_sender');
+    config()->set('barta.drivers.infobip.base_url', 'https://api.infobip.com');
+    config()->set('barta.drivers.infobip.username', 'test_user');
+    config()->set('barta.drivers.infobip.password', 'test_pass');
+    config()->set('barta.drivers.infobip.sender_id', 'test_sender');
 });
 
 it('can instantiate the infobip driver', function () {
-    $driver = new InfobipDriver(config('kotha.drivers.infobip'));
+    $driver = new InfobipDriver(config('barta.drivers.infobip'));
     expect($driver)->toBeInstanceOf(InfobipDriver::class);
 });
 
@@ -28,7 +28,7 @@ it('sends sms successfully with infobip driver', function () {
         ], 200),
     ]);
 
-    $driver = new InfobipDriver(config('kotha.drivers.infobip'));
+    $driver = new InfobipDriver(config('barta.drivers.infobip'));
     $response = $driver->to('8801700000000')->message('Test message')->send();
 
     expect($response)->toBeInstanceOf(ResponseData::class);
@@ -49,7 +49,7 @@ it('sends bulk sms with infobip driver', function () {
         ], 200),
     ]);
 
-    $driver = new InfobipDriver(config('kotha.drivers.infobip'));
+    $driver = new InfobipDriver(config('barta.drivers.infobip'));
     $response = $driver->to(['8801700000000', '8801800000000'])->message('Bulk test')->send();
 
     expect($response->success)->toBeTrue();
@@ -70,34 +70,34 @@ it('throws exception on infobip api error', function () {
         ], 200),
     ]);
 
-    $driver = new InfobipDriver(config('kotha.drivers.infobip'));
+    $driver = new InfobipDriver(config('barta.drivers.infobip'));
     $driver->to('8801700000000')->message('Test')->send();
-})->throws(KothaException::class, 'Invalid sender');
+})->throws(BartaException::class, 'Invalid sender');
 
 it('throws exception if base_url missing', function () {
-    config()->set('kotha.drivers.infobip.base_url', null);
+    config()->set('barta.drivers.infobip.base_url', null);
 
-    $driver = new InfobipDriver(config('kotha.drivers.infobip'));
+    $driver = new InfobipDriver(config('barta.drivers.infobip'));
     $driver->to('8801700000000')->message('Test')->send();
-})->throws(KothaException::class, 'base_url');
+})->throws(BartaException::class, 'base_url');
 
 it('throws exception if username missing', function () {
-    config()->set('kotha.drivers.infobip.username', null);
+    config()->set('barta.drivers.infobip.username', null);
 
-    $driver = new InfobipDriver(config('kotha.drivers.infobip'));
+    $driver = new InfobipDriver(config('barta.drivers.infobip'));
     $driver->to('8801700000000')->message('Test')->send();
-})->throws(KothaException::class, 'username');
+})->throws(BartaException::class, 'username');
 
 it('throws exception if password missing', function () {
-    config()->set('kotha.drivers.infobip.password', null);
+    config()->set('barta.drivers.infobip.password', null);
 
-    $driver = new InfobipDriver(config('kotha.drivers.infobip'));
+    $driver = new InfobipDriver(config('barta.drivers.infobip'));
     $driver->to('8801700000000')->message('Test')->send();
-})->throws(KothaException::class, 'password');
+})->throws(BartaException::class, 'password');
 
 it('throws exception if sender_id missing', function () {
-    config()->set('kotha.drivers.infobip.sender_id', null);
+    config()->set('barta.drivers.infobip.sender_id', null);
 
-    $driver = new InfobipDriver(config('kotha.drivers.infobip'));
+    $driver = new InfobipDriver(config('barta.drivers.infobip'));
     $driver->to('8801700000000')->message('Test')->send();
-})->throws(KothaException::class, 'sender_id');
+})->throws(BartaException::class, 'sender_id');

@@ -1,9 +1,8 @@
 <?php
 
-namespace Larament\Kotha\Tests;
+namespace Larament\Barta\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Larament\Kotha\KothaServiceProvider;
+use Larament\Barta\BartaServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -11,10 +10,6 @@ class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Digimax\\Kotha\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
     }
 
     public function getEnvironmentSetUp($app)
@@ -31,7 +26,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            KothaServiceProvider::class,
+            BartaServiceProvider::class,
         ];
     }
 }

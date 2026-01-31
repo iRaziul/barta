@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Exceptions;
+namespace Larament\Barta\Exceptions;
 
 use Exception;
 
-class KothaException extends Exception
+class BartaException extends Exception
 {
     public static function invalidNumber(string $number): self
     {

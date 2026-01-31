@@ -3,22 +3,22 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Drivers\SmsnocDriver;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Drivers\SmsnocDriver;
+use Larament\Barta\Exceptions\BartaException;
 
 beforeEach(function () {
-    config()->set('kotha.drivers.smsnoc.api_token', 'test_token');
-    config()->set('kotha.drivers.smsnoc.sender_id', 'test_sender_id');
+    config()->set('barta.drivers.smsnoc.api_token', 'test_token');
+    config()->set('barta.drivers.smsnoc.sender_id', 'test_sender_id');
 });
 
 it('can instantiate the smsnoc driver', function () {
-    $driver = new SmsnocDriver(config('kotha.drivers.smsnoc'));
+    $driver = new SmsnocDriver(config('barta.drivers.smsnoc'));
     expect($driver)->toBeInstanceOf(SmsnocDriver::class);
 });
 
 it('can set recipient and message for smsnoc driver', function () {
-    $driver = new SmsnocDriver(config('kotha.drivers.smsnoc'));
+    $driver = new SmsnocDriver(config('barta.drivers.smsnoc'));
 
     expect($driver->to('8801700000000'))->toBeInstanceOf(SmsnocDriver::class);
     expect($driver->message('Test message'))->toBeInstanceOf(SmsnocDriver::class);
@@ -29,7 +29,7 @@ it('sends sms successfully with smsnoc driver', function () {
         'https://app.smsnoc.com/*' => Http::response(['status' => 'success', 'message' => 'SMS Sent'], 200),
     ]);
 
-    $driver = new SmsnocDriver(config('kotha.drivers.smsnoc'));
+    $driver = new SmsnocDriver(config('barta.drivers.smsnoc'));
     $response = $driver->to('8801700000000')->message('Test message')->send();
 
     expect($response)->toBeInstanceOf(ResponseData::class);
@@ -51,7 +51,7 @@ it('sends bulk sms successfully with smsnoc driver', function () {
         'https://app.smsnoc.com/*' => Http::response(['status' => 'success', 'message' => 'SMS Sent'], 200),
     ]);
 
-    $driver = new SmsnocDriver(config('kotha.drivers.smsnoc'));
+    $driver = new SmsnocDriver(config('barta.drivers.smsnoc'));
     $response = $driver->to(['8801700000000', '8801800000000'])->message('Bulk test')->send();
 
     expect($response)->toBeInstanceOf(ResponseData::class);
@@ -62,25 +62,25 @@ it('sends bulk sms successfully with smsnoc driver', function () {
     });
 });
 
-it('throws KothaException on smsnoc api error', function () {
+it('throws BartaException on smsnoc api error', function () {
     Http::fake([
         'https://app.smsnoc.com/*' => Http::response(['status' => 'error', 'message' => 'Invalid API Token'], 200),
     ]);
 
-    $driver = new SmsnocDriver(config('kotha.drivers.smsnoc'));
+    $driver = new SmsnocDriver(config('barta.drivers.smsnoc'));
     $driver->to('8801700000000')->message('Test message')->send();
-})->throws(KothaException::class, 'Invalid API Token');
+})->throws(BartaException::class, 'Invalid API Token');
 
-it('throws KothaException if api_token is missing for smsnoc driver', function () {
-    config()->set('kotha.drivers.smsnoc.api_token', null);
+it('throws BartaException if api_token is missing for smsnoc driver', function () {
+    config()->set('barta.drivers.smsnoc.api_token', null);
 
-    $driver = new SmsnocDriver(config('kotha.drivers.smsnoc'));
+    $driver = new SmsnocDriver(config('barta.drivers.smsnoc'));
     $driver->to('8801700000000')->message('Test message')->send();
-})->throws(KothaException::class, 'Please set api_token for smsnoc in config/kotha.php.');
+})->throws(BartaException::class, 'Please set api_token for smsnoc in config/barta.php.');
 
-it('throws KothaException if sender_id is missing for smsnoc driver', function () {
-    config()->set('kotha.drivers.smsnoc.sender_id', null);
+it('throws BartaException if sender_id is missing for smsnoc driver', function () {
+    config()->set('barta.drivers.smsnoc.sender_id', null);
 
-    $driver = new SmsnocDriver(config('kotha.drivers.smsnoc'));
+    $driver = new SmsnocDriver(config('barta.drivers.smsnoc'));
     $driver->to('8801700000000')->message('Test message')->send();
-})->throws(KothaException::class, 'Please set sender_id for smsnoc in config/kotha.php.');
+})->throws(BartaException::class, 'Please set sender_id for smsnoc in config/barta.php.');

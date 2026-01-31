@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Drivers\AbstractDriver;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Drivers\AbstractDriver;
+use Larament\Barta\Exceptions\BartaException;
 
 class ConcreteDriver extends AbstractDriver
 {
@@ -36,7 +36,7 @@ it('formats valid bangladeshi numbers with 88 prefix', function (string $input, 
 it('throws exception for invalid bangladeshi numbers', function (string $input) {
     $driver = new ConcreteDriver;
     $driver->callFormatPhoneNumber($input);
-})->throws(KothaException::class)->with([
+})->throws(BartaException::class)->with([
     'too short' => ['12345'],
     'invalid prefix' => ['01200000000'],
     'too long' => ['017000000001234'],
@@ -45,4 +45,4 @@ it('throws exception for invalid bangladeshi numbers', function (string $input) 
 it('throws exception for invalid number format', function () {
     $driver = new ConcreteDriver;
     $driver->callFormatPhoneNumber('12345');
-})->throws(KothaException::class);
+})->throws(BartaException::class);

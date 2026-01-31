@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Drivers;
+namespace Larament\Barta\Drivers;
 
 use Illuminate\Support\Facades\Http;
-use Larament\Kotha\Data\ResponseData;
-use Larament\Kotha\Exceptions\KothaException;
+use Larament\Barta\Data\ResponseData;
+use Larament\Barta\Exceptions\BartaException;
 
 final class RobiDriver extends AbstractDriver
 {
@@ -30,7 +30,7 @@ final class RobiDriver extends AbstractDriver
         $body = $response->body();
 
         if (str_contains(mb_strtolower($body), 'error') || str_contains(mb_strtolower($body), 'fail')) {
-            throw new KothaException($body ?: 'Robi API error');
+            throw new BartaException($body ?: 'Robi API error');
         }
 
         return new ResponseData(
@@ -44,11 +44,11 @@ final class RobiDriver extends AbstractDriver
         parent::validate();
 
         if (empty($this->config['username'])) {
-            throw new KothaException('Please set username for Robi in config/kotha.php.');
+            throw new BartaException('Please set username for Robi in config/barta.php.');
         }
 
         if (empty($this->config['password'])) {
-            throw new KothaException('Please set password for Robi in config/kotha.php.');
+            throw new BartaException('Please set password for Robi in config/barta.php.');
         }
     }
 }

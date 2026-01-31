@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Larament\Kotha\Jobs;
+namespace Larament\Barta\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Larament\Kotha\KothaManager;
+use Larament\Barta\BartaManager;
 
 class SendSmsJob implements ShouldQueue
 {
@@ -29,7 +29,7 @@ class SendSmsJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(KothaManager $manager): void
+    public function handle(BartaManager $manager): void
     {
         $manager
             ->driver($this->driver)
