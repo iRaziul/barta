@@ -48,6 +48,7 @@ Barta is a clean, expressive Laravel package designed to integrate popular Bangl
 | [GreenWeb](https://greenweb.com.bd)     | `greenweb`     | ✅ Supported |
 | [BulkSMS BD](https://bulksmsbd.net)     | `bulksms`      | ✅ Supported |
 | [ElitBuzz](https://elitbuzz.com)        | `elitbuzz`     | ✅ Supported |
+| [SMS NOC](https://smsnoc.com)           | `smsnoc`       | ✅ Supported |
 
 > **Want more gateways?** [Request a gateway](https://github.com/iRaziul/barta/issues) or [contribute a driver](#-creating-custom-drivers).
 
