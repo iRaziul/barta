@@ -1,12 +1,10 @@
+# Barta (কথা) - The unified interface for every Bangladeshi SMS gateway.
+
 <div align="center">
 <a href="https://github.com/iRaziul/barta">
 <img src="https://raw.githubusercontent.com/iRaziul/barta/main/.github/assets/banner.svg" alt="Barta Banner">
 </a>
 <br>
-<h1>Barta (কথা)</h1>
-<p>
-    <strong>The unified interface for every Bangladeshi SMS gateway.</strong>
-</p>
 <p>
 Barta is a clean, expressive Laravel package designed to integrate popular Bangladeshi SMS gateways seamlessly. Whether you're sending OTPs, marketing alerts, or notifications, Barta makes the process as simple as a conversation.
 </p>
