@@ -12,10 +12,8 @@ final class EsmsDriver extends AbstractDriver
 {
     private string $baseUrl = 'https://login.esms.com.bd/api/v3';
 
-    public function send(): ResponseData
+    protected function sendSms(): ResponseData
     {
-        $this->validate();
-
         $response = Http::baseUrl($this->baseUrl)
             ->withToken($this->config['api_token'])
             ->timeout($this->timeout)
@@ -39,10 +37,8 @@ final class EsmsDriver extends AbstractDriver
         );
     }
 
-    protected function validate(): void
+    protected function validateConfig(): void
     {
-        parent::validate();
-
         if (! $this->config['sender_id']) {
             throw new BartaException('Please set sender_id for ESMS in config/barta.php.');
         }

@@ -7,12 +7,15 @@ namespace Larament\Barta\Drivers;
 use Illuminate\Support\Facades\Log;
 use Larament\Barta\Data\ResponseData;
 
-class LogDriver extends AbstractDriver
+final class LogDriver extends AbstractDriver
 {
-    public function send(): ResponseData
+    protected function validateConfig(): void
     {
-        $this->validate();
+        // no config needed
+    }
 
+    protected function sendSms(): ResponseData
+    {
         Log::info('[BARTA] Message sent', [
             'recipients' => $this->recipients,
             'message' => $this->message,

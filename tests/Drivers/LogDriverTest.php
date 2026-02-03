@@ -43,6 +43,7 @@ it('returns successful response when sending', function () {
 });
 
 it('logs the message when sending', function () {
+    Log::shouldReceive('channel')->zeroOrMoreTimes()->andReturnSelf();
     Log::shouldReceive('info')
         ->once()
         ->with('[BARTA] Message sent', [

@@ -8,12 +8,14 @@ use Larament\Barta\Exceptions\BartaException;
 
 class ConcreteDriver extends AbstractDriver
 {
-    public function send(): ResponseData
+    protected function sendSms(): ResponseData
     {
-        // Concrete implementation for testing abstract methods
-        $this->validate();
-
         return new ResponseData(success: true);
+    }
+
+    protected function validateConfig(): void
+    {
+        // Override in child classes for driver-specific validation
     }
 }
 

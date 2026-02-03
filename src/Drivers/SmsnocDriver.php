@@ -12,10 +12,8 @@ final class SmsnocDriver extends AbstractDriver
 {
     private string $baseUrl = 'https://app.smsnoc.com/api/v3';
 
-    public function send(): ResponseData
+    protected function sendSms(): ResponseData
     {
-        $this->validate();
-
         $response = Http::baseUrl($this->baseUrl)
             ->withToken($this->config['api_token'])
             ->timeout($this->timeout)
@@ -39,10 +37,8 @@ final class SmsnocDriver extends AbstractDriver
         );
     }
 
-    protected function validate(): void
+    protected function validateConfig(): void
     {
-        parent::validate();
-
         if (! $this->config['api_token']) {
             throw new BartaException('Please set api_token for smsnoc in config/barta.php.');
         }

@@ -12,10 +12,8 @@ final class RobiDriver extends AbstractDriver
 {
     private string $baseUrl = 'https://bmpws.robi.com.bd/ApacheGearWS';
 
-    public function send(): ResponseData
+    protected function sendSms(): ResponseData
     {
-        $this->validate();
-
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
             ->retry($this->retry, $this->retryDelay)
@@ -39,10 +37,8 @@ final class RobiDriver extends AbstractDriver
         );
     }
 
-    protected function validate(): void
+    protected function validateConfig(): void
     {
-        parent::validate();
-
         if (empty($this->config['username'])) {
             throw new BartaException('Please set username for Robi in config/barta.php.');
         }

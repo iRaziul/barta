@@ -37,9 +37,24 @@ abstract class AbstractDriver
     }
 
     /**
-     * Send the message
+     * Driver-specific send implementation.
      */
-    abstract public function send(): ResponseData;
+    abstract protected function sendSms(): ResponseData;
+
+    /**
+     * Driver-specific config validation.
+     */
+    abstract protected function validateConfig(): void;
+
+    /**
+     * Send the message.
+     */
+    final public function send(): ResponseData
+    {
+        $this->validate();
+
+        return $this->sendSms();
+    }
 
     /**
      * Queue the message for later sending.
@@ -88,7 +103,7 @@ abstract class AbstractDriver
     /**
      * Get the driver name for queue purposes.
      */
-    protected function getDriverName(): string
+    private function getDriverName(): string
     {
         $className = class_basename(static::class);
 
@@ -99,9 +114,9 @@ abstract class AbstractDriver
     }
 
     /**
-     * Validate the recipient and message
+     * Validate the recipient, message & config.
      */
-    protected function validate(): void
+    private function validate(): void
     {
         if (empty($this->recipients)) {
             throw BartaException::missingRecipient();
@@ -110,5 +125,7 @@ abstract class AbstractDriver
         if (empty($this->message)) {
             throw BartaException::missingMessage();
         }
+
+        $this->validateConfig();
     }
 }

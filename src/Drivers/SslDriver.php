@@ -12,10 +12,8 @@ final class SslDriver extends AbstractDriver
 {
     private string $baseUrl = 'https://smsplus.sslwireless.com/api/v3';
 
-    public function send(): ResponseData
+    protected function sendSms(): ResponseData
     {
-        $this->validate();
-
         $endpoint = count($this->recipients) > 1 ? '/send-sms/bulk' : '/send-sms';
 
         $response = Http::baseUrl($this->baseUrl)
@@ -42,10 +40,8 @@ final class SslDriver extends AbstractDriver
         );
     }
 
-    protected function validate(): void
+    protected function validateConfig(): void
     {
-        parent::validate();
-
         if (empty($this->config['api_token'])) {
             throw new BartaException('Please set api_token for SSL Wireless in config/barta.php.');
         }

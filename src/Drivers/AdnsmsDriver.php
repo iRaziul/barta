@@ -12,10 +12,8 @@ final class AdnsmsDriver extends AbstractDriver
 {
     private string $baseUrl = 'https://portal.adnsms.com/api/v1/secure';
 
-    public function send(): ResponseData
+    protected function sendSms(): ResponseData
     {
-        $this->validate();
-
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
             ->retry($this->retry, $this->retryDelay, throw: false)
@@ -42,10 +40,8 @@ final class AdnsmsDriver extends AbstractDriver
         );
     }
 
-    protected function validate(): void
+    protected function validateConfig(): void
     {
-        parent::validate();
-
         if (empty($this->config['api_key'])) {
             throw new BartaException('Please set api_key for ADN in config/barta.php.');
         }

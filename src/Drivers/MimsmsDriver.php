@@ -12,10 +12,8 @@ final class MimsmsDriver extends AbstractDriver
 {
     private string $baseUrl = 'https://api.mimsms.com/api/SmsSending';
 
-    public function send(): ResponseData
+    protected function sendSms(): ResponseData
     {
-        $this->validate();
-
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
             ->retry($this->retry, $this->retryDelay)
@@ -41,10 +39,8 @@ final class MimsmsDriver extends AbstractDriver
         );
     }
 
-    protected function validate(): void
+    protected function validateConfig(): void
     {
-        parent::validate();
-
         if (! $this->config['username']) {
             throw new BartaException('Please set username for Mimsms in config/barta.php.');
         }

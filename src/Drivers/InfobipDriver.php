@@ -10,10 +10,8 @@ use Larament\Barta\Exceptions\BartaException;
 
 final class InfobipDriver extends AbstractDriver
 {
-    public function send(): ResponseData
+    protected function sendSms(): ResponseData
     {
-        $this->validate();
-
         $response = Http::baseUrl($this->config['base_url'])
             ->timeout($this->timeout)
             ->retry($this->retry, $this->retryDelay)
@@ -49,10 +47,8 @@ final class InfobipDriver extends AbstractDriver
         );
     }
 
-    protected function validate(): void
+    protected function validateConfig(): void
     {
-        parent::validate();
-
         if (empty($this->config['base_url'])) {
             throw new BartaException('Please set base_url for Infobip in config/barta.php.');
         }

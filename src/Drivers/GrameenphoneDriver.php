@@ -12,10 +12,8 @@ final class GrameenphoneDriver extends AbstractDriver
 {
     private string $baseUrl = 'https://gpcmp.grameenphone.com/ecmapigw/webresources/ecmapigw.v2';
 
-    public function send(): ResponseData
+    protected function sendSms(): ResponseData
     {
-        $this->validate();
-
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
             ->retry($this->retry, $this->retryDelay)
@@ -46,10 +44,8 @@ final class GrameenphoneDriver extends AbstractDriver
         );
     }
 
-    protected function validate(): void
+    protected function validateConfig(): void
     {
-        parent::validate();
-
         if (empty($this->config['username'])) {
             throw new BartaException('Please set username for Grameenphone in config/barta.php.');
         }
