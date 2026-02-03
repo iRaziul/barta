@@ -1,5 +1,9 @@
 # Changelog
 
+## Release v1.2.1 - 2026-02-03
+
+### Changed\n- Refactor drivers to use the Template Method pattern\n- Refactor phone number formatting to a dedicated helper class\n- Refactor log driver test to be more concise\n- Downgrade PHP version requirements to 8.2
+
 ## v1.2.0 - 2026-02-01
 
 ### Added
