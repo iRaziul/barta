@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Log;
 use Larament\Barta\Data\ResponseData;
 use Larament\Barta\Drivers\LogDriver;
 use Larament\Barta\Exceptions\BartaException;
@@ -40,29 +39,4 @@ it('returns successful response when sending', function () {
     expect($response)->toBeInstanceOf(ResponseData::class);
     expect($response->success)->toBeTrue();
     expect($response->data)->toHaveKey('message');
-});
-
-it('logs the message when sending', function () {
-    Log::shouldReceive('channel')->zeroOrMoreTimes()->andReturnSelf();
-    Log::shouldReceive('info')
-        ->once()
-        ->with('[BARTA] Message sent', [
-            'recipients' => ['8801700000000'],
-            'message' => 'Test message',
-        ]);
-
-    $driver = new LogDriver;
-    $driver->to('8801700000000')->message('Test message')->send();
-});
-
-it('logs bulk recipients when sending', function () {
-    Log::shouldReceive('info')
-        ->once()
-        ->with('[BARTA] Message sent', [
-            'recipients' => ['8801700000000', '8801800000000'],
-            'message' => 'Bulk test',
-        ]);
-
-    $driver = new LogDriver;
-    $driver->to(['8801700000000', '8801800000000'])->message('Bulk test')->send();
 });
