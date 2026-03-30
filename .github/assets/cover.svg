@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="400" viewBox="0 0 1600 400" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="132" y1="34" x2="1428" y2="386" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F3D3A"/>
+      <stop offset="0.55" stop-color="#14554F"/>
+      <stop offset="1" stop-color="#0C2D2A"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1192 88) rotate(90) scale(210 340)">
+      <stop stop-color="#F4C95D" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#F4C95D" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1368 308) rotate(180) scale(268 184)">
+      <stop stop-color="#EF8354" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#EF8354" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="panel" x1="949" y1="66" x2="1499" y2="346" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F1DF" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#F7F1DF" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="line" x1="922" y1="200" x2="1450" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E8F6F2" stop-opacity="0.2"/>
+      <stop offset="0.55" stop-color="#F4C95D" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#EF8354" stop-opacity="0.88"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#041917" flood-opacity="0.26"/>
+    </filter>
+    <pattern id="grid" patternUnits="userSpaceOnUse" width="44" height="44">
+      <path d="M44 0H0V44" stroke="#E8F6F2" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="400" rx="32" fill="url(#bg)"/>
+  <rect width="1600" height="400" rx="32" fill="url(#grid)"/>
+  <rect width="1600" height="400" rx="32" fill="url(#glowA)"/>
+  <rect width="1600" height="400" rx="32" fill="url(#glowB)"/>
+
+  <circle cx="128" cy="82" r="38" fill="#F4C95D" fill-opacity="0.14"/>
+  <circle cx="1448" cy="62" r="64" fill="#F7F1DF" fill-opacity="0.06"/>
+  <circle cx="1510" cy="326" r="92" fill="#EF8354" fill-opacity="0.08"/>
+
+  <g opacity="0.9">
+    <path d="M112 126H204" stroke="#F4C95D" stroke-width="4" stroke-linecap="round"/>
+    <path d="M112 142H172" stroke="#F4C95D" stroke-width="4" stroke-linecap="round" stroke-opacity="0.68"/>
+  </g>
+
+  <text x="112" y="206" fill="#F7F1DF" font-size="108" font-weight="700" font-family="Space Grotesk, Avenir Next, Segoe UI, sans-serif" letter-spacing="-2">Barta</text>
+  <text x="468" y="206" fill="#F4C95D" font-size="88" font-weight="600" font-family="Noto Sans Bengali, Hind Siliguri, Segoe UI, sans-serif">বার্তা</text>
+  <text x="112" y="258" fill="#DCEEE8" font-size="28" font-weight="500" font-family="Space Grotesk, Avenir Next, Segoe UI, sans-serif" opacity="0.92">Unified interface for Bangladeshi SMS gateways</text>
+  <text x="112" y="302" fill="#DCEEE8" font-size="22" font-weight="400" font-family="Space Grotesk, Avenir Next, Segoe UI, sans-serif" opacity="0.68">Laravel package for OTPs, alerts, notifications, and routed messaging</text>
+
+  <g filter="url(#shadow)">
+    <rect x="922" y="54" width="566" height="292" rx="32" fill="url(#panel)" stroke="#E8F6F2" stroke-opacity="0.14"/>
+  </g>
+
+  <g stroke="url(#line)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1018 132H1124C1152 132 1174 154 1174 182V182C1174 210 1196 232 1224 232H1308"/>
+    <path d="M1036 256H1122C1148 256 1170 236 1170 210V210C1170 184 1192 164 1218 164H1308"/>
+    <path d="M1308 198H1368"/>
+  </g>
+
+  <g>
+    <rect x="970" y="100" width="96" height="56" rx="18" fill="#F7F1DF" fill-opacity="0.96"/>
+    <path d="M992 126H1028" stroke="#14554F" stroke-width="6" stroke-linecap="round"/>
+    <path d="M992 140H1038" stroke="#14554F" stroke-width="6" stroke-linecap="round" stroke-opacity="0.68"/>
+    <circle cx="1060" cy="112" r="10" fill="#F4C95D"/>
+  </g>
+
+  <g>
+    <rect x="986" y="228" width="96" height="56" rx="18" fill="#F7F1DF" fill-opacity="0.96"/>
+    <path d="M1008 254H1042" stroke="#14554F" stroke-width="6" stroke-linecap="round"/>
+    <path d="M1008 268H1052" stroke="#14554F" stroke-width="6" stroke-linecap="round" stroke-opacity="0.68"/>
+    <circle cx="1070" cy="240" r="10" fill="#EF8354"/>
+  </g>
+
+  <g>
+    <rect x="1308" y="144" width="136" height="108" rx="28" fill="#F7F1DF"/>
+    <path d="M1354 172H1398C1410 172 1420 182 1420 194V204C1420 216 1410 226 1398 226H1384L1364 242V226H1354C1342 226 1332 216 1332 204V194C1332 182 1342 172 1354 172Z" fill="#14554F"/>
+    <circle cx="1362" cy="198" r="6" fill="#F4C95D"/>
+    <circle cx="1380" cy="198" r="6" fill="#F4C95D"/>
+    <circle cx="1398" cy="198" r="6" fill="#F4C95D"/>
+  </g>
+
+  <g opacity="0.8">
+    <circle cx="1228" cy="164" r="8" fill="#F4C95D"/>
+    <circle cx="1224" cy="232" r="8" fill="#EF8354"/>
+    <circle cx="1308" cy="198" r="10" fill="#F7F1DF"/>
+  </g>
+</svg>
