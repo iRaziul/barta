@@ -1,4 +1,4 @@
-![Barta is a Laravel package for integrating Bangladeshi SMS gateways.](assets/cover.svg)
+![Barta is a Laravel package for integrating Bangladeshi SMS gateways.](.github/assets/cover.svg)
 
 # Barta - Laravel package for integrating Bangladeshi SMS gateways
 
