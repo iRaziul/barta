@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
 use Larament\Barta\BartaManager;
 
 /**
- * @method static self to(string $number)
+ * @method static self to(string|array $numbers)
  * @method static self message(string $message)
  * @method static \Larament\Barta\Data\ResponseData send()
  * @method static self driver(?string $driver)

@@ -80,6 +80,12 @@ return [
             'api_token' => env('BARTA_SMSNOC_TOKEN'),
             'sender_id' => env('BARTA_SMSNOC_SENDER_ID'),
         ],
+        'fallback' => [
+            'drivers' => ['mimsms', 'esms'],
+        ],
+        'roundrobin' => [
+            'drivers' => ['mimsms', 'esms', 'ssl'],
+        ],
     ],
 
     /*
