@@ -11,12 +11,14 @@ use Larament\Barta\Drivers\BanglalinkDriver;
 use Larament\Barta\Drivers\BulksmsDriver;
 use Larament\Barta\Drivers\ElitbuzzDriver;
 use Larament\Barta\Drivers\EsmsDriver;
+use Larament\Barta\Drivers\FallbackDriver;
 use Larament\Barta\Drivers\GrameenphoneDriver;
 use Larament\Barta\Drivers\GreenwebDriver;
 use Larament\Barta\Drivers\InfobipDriver;
 use Larament\Barta\Drivers\LogDriver;
 use Larament\Barta\Drivers\MimsmsDriver;
 use Larament\Barta\Drivers\RobiDriver;
+use Larament\Barta\Drivers\RoundrobinDriver;
 use Larament\Barta\Drivers\SmsnocDriver;
 use Larament\Barta\Drivers\SslDriver;
 
@@ -95,5 +97,15 @@ class BartaManager extends Manager
     protected function createSmsnocDriver(): SmsnocDriver
     {
         return new SmsnocDriver($this->config->get('barta.drivers.smsnoc'));
+    }
+
+    protected function createFallbackDriver(): FallbackDriver
+    {
+        return new FallbackDriver($this->config->get('barta.drivers.fallback'));
+    }
+
+    protected function createRoundrobinDriver(): RoundrobinDriver
+    {
+        return new RoundrobinDriver($this->config->get('barta.drivers.roundrobin'));
     }
 }
