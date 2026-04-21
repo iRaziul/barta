@@ -12,7 +12,7 @@ use Larament\Barta\Notifications\BartaChannel;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class BartaServiceProvider extends PackageServiceProvider
+final class BartaServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {

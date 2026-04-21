@@ -7,7 +7,7 @@ namespace Larament\Barta\Notifications;
 use Illuminate\Notifications\Notification;
 use Larament\Barta\Facades\Barta;
 
-class BartaChannel
+final class BartaChannel
 {
     /**
      * Send the given notification.

@@ -15,7 +15,7 @@ use Larament\Barta\BartaManager;
  *
  * @see BartaManager
  */
-class Barta extends Facade
+final class Barta extends Facade
 {
     protected static function getFacadeAccessor(): string
     {

@@ -6,7 +6,7 @@ use Larament\Barta\Data\ResponseData;
 use Larament\Barta\Drivers\AbstractDriver;
 use Larament\Barta\Exceptions\BartaException;
 
-class ConcreteDriver extends AbstractDriver
+final class ConcreteDriver extends AbstractDriver
 {
     protected function sendSms(): ResponseData
     {
