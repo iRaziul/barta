@@ -6,7 +6,7 @@ namespace Larament\Barta\Exceptions;
 
 use Exception;
 
-class BartaException extends Exception
+final class BartaException extends Exception
 {
     public static function invalidNumber(string $number): self
     {

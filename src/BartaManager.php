@@ -20,7 +20,7 @@ use Larament\Barta\Drivers\RobiDriver;
 use Larament\Barta\Drivers\SmsnocDriver;
 use Larament\Barta\Drivers\SslDriver;
 
-class BartaManager extends Manager
+final class BartaManager extends Manager
 {
     public function getDefaultDriver(): string
     {

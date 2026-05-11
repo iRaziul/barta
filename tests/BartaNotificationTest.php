@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Larament\Barta\Notifications\BartaChannel;
 use Larament\Barta\Notifications\BartaMessage;
 
-class TestNotifiable
+final class TestNotifiable
 {
     use Notifiable;
 
@@ -20,7 +20,7 @@ class TestNotifiable
     }
 }
 
-class TestNotification extends Notification
+final class TestNotification extends Notification
 {
     public function toBarta(): BartaMessage
     {
@@ -28,7 +28,7 @@ class TestNotification extends Notification
     }
 }
 
-class TestNotificationWithCustomDriver extends Notification
+final class TestNotificationWithCustomDriver extends Notification
 {
     public function toBarta(): BartaMessage
     {
