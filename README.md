@@ -6,7 +6,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/larament/barta.svg?style=flat-square)](https://packagist.org/packages/larament/barta)
 [![Run Tests](https://github.com/iRaziul/barta/actions/workflows/run-tests.yml/badge.svg)](https://github.com/iRaziul/barta/actions/workflows/run-tests.yml)
 [![PHPStan](https://github.com/iRaziul/barta/actions/workflows/phpstan.yml/badge.svg)](https://github.com/iRaziul/barta/actions/workflows/phpstan.yml)
-[![Pint](https://github.com/iRaziul/barta/actions/workflows/fix-php-code-style-issues.yml/badge.svg)](https://github.com/iRaziul/barta/actions/workflows/fix-php-code-style-issues.yml)
+[![Laravel Compatibility](https://badge.laravel.cloud/badge/larament/barta)](https://packagist.org/packages/larament/barta)
 [![License](https://img.shields.io/github/license/iRaziul/barta.svg?style=flat-square)](https://github.com/iRaziul/barta/blob/main/LICENSE.md)
 
 Barta provides a clean, expressive way to send SMS from Laravel applications using Bangladeshi gateways. It gives you a single API for transactional messages, OTP delivery, alerts, queued sends, and notification-based messaging.
