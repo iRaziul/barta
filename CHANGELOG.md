@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.4.0 - 2026-05-11
+
+### What's Changed
+
+* Fix gemini docs by @rtraselbd in https://github.com/iRaziul/barta/pull/7
+* chore: enforce strict types and final classes via Pint configuration by @rtraselbd in https://github.com/iRaziul/barta/pull/8
+* feat: add Fallback and Roundrobin drivers by @rtraselbd in https://github.com/iRaziul/barta/pull/9
+* build(deps): bump dependabot/fetch-metadata from 2.5.0 to 3.1.0 by @dependabot[bot] in https://github.com/iRaziul/barta/pull/10
+
+**Full Changelog**: https://github.com/iRaziul/barta/compare/v1.3.0...v1.4.0
+
 ## v1.3.0 - 2026-03-30
 
 ### Added
