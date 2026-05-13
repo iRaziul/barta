@@ -18,7 +18,7 @@ final class MimsmsDriver extends AbstractDriver
             ->timeout($this->timeout)
             ->retry($this->retry, $this->retryDelay)
             ->asJson()
-            ->post('/Send', [
+            ->post('/SMS', [
                 'UserName' => $this->config['username'],
                 'ApiKey' => $this->config['api_key'],
                 'SenderName' => $this->config['sender_id'],
