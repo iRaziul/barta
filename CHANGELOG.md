@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.5.0 - 2026-09-18
+
+### Added
+
+- **Account Balance Checking**: Check SMS gateway credit balances directly via `Barta::balance()` or `$driver->balance()`, returning the remaining balance as a `float`. Supported across BulkSMS, MimSMS, eSMS, ADN SMS, Greenweb, Alpha SMS, SMS NOC, Infobip, ZendSMS, Log, Fallback, and Roundrobin drivers.
+- **ZendSMS Gateway Driver**: Added native driver support for ZendSMS (`zendsms`).
+
+### Changed & Improved
+
+- **Driver State Isolation**: Ensured driver recipient and message state are always reset, even if an exception occurs during sending.
+- **Phone Number Normalization**: Enhanced Bangladeshi phone number formatting using robust regex matching.
+- **Service Provider Alignment**: Refactored package service provider to align cleanly with package lifecycle hooks.
+- **Facade Documentation**: Added method docblocks to the `Barta` facade for complete IDE autocomplete and static analysis.
+- **eSMS API Endpoint**: Updated endpoint mapping to `/SMS`.
+
 ## v1.4.0 - 2026-05-11
 
 ### What's Changed
