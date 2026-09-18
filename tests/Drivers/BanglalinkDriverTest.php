@@ -65,3 +65,8 @@ it('throws exception if sender_id missing', function () {
     $driver = new BanglalinkDriver(config('barta.drivers.banglalink'));
     $driver->to('8801700000000')->message('Test')->send();
 })->throws(BartaException::class, 'sender_id');
+
+it('throws exception when checking balance on unsupported driver', function () {
+    $driver = new BanglalinkDriver(config('barta.drivers.banglalink'));
+    $driver->balance();
+})->throws(BartaException::class, 'Balance checking is not supported by [banglalink] driver.');

@@ -102,3 +102,32 @@ it('throws BartaException on non-json response', function () {
     $driver = new EsmsDriver(config('barta.drivers.esms'));
     $driver->to('8801700000000')->message('Test message')->send();
 })->throws(BartaException::class, 'Invalid response received');
+
+it('checks balance successfully with esms driver', function () {
+    Http::fake([
+        'https://login.esms.com.bd/api/v3/balance*' => Http::response([
+            'status' => 'success',
+            'data' => [
+                'remaining_balance' => '320.00',
+                'currency' => 'BDT',
+            ],
+        ], 200),
+    ]);
+
+    $driver = new EsmsDriver(config('barta.drivers.esms'));
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(320.0);
+});
+
+it('throws exception on esms balance check error', function () {
+    Http::fake([
+        'https://login.esms.com.bd/api/v3/balance*' => Http::response([
+            'status' => 'error',
+            'message' => 'Unauthenticated',
+        ], 200),
+    ]);
+
+    $driver = new EsmsDriver(config('barta.drivers.esms'));
+    $driver->balance();
+})->throws(BartaException::class, 'Unauthenticated');

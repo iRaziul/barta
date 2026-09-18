@@ -51,3 +51,33 @@ it('throws exception if api_secret missing', function () {
     $driver = new AdnsmsDriver(config('barta.drivers.adnsms'));
     $driver->to('8801700000000')->message('Test')->send();
 })->throws(BartaException::class, 'api_secret');
+
+it('checks balance successfully with adn driver', function () {
+    Http::fake([
+        'https://portal.adnsms.com/api/v1/secure/check-balance' => Http::response([
+            'balance' => [
+                'sms' => 49,
+            ],
+            'api_response_code' => 200,
+            'api_response_message' => 'SUCCESS',
+        ], 200),
+    ]);
+
+    $driver = new AdnsmsDriver(config('barta.drivers.adnsms'));
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(49.0);
+});
+
+it('throws exception on adn balance check error', function () {
+    Http::fake([
+        'https://portal.adnsms.com/api/v1/secure/check-balance' => Http::response([
+            'balance' => [],
+            'api_response_code' => 400,
+            'api_response_message' => 'INVALID_CREDENTIAL',
+        ], 200),
+    ]);
+
+    $driver = new AdnsmsDriver(config('barta.drivers.adnsms'));
+    $driver->balance();
+})->throws(BartaException::class, 'INVALID_CREDENTIAL');

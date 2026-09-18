@@ -10,7 +10,7 @@ use Larament\Barta\Exceptions\BartaException;
 
 final class MimsmsDriver extends AbstractDriver
 {
-    private string $baseUrl = 'https://api.mimsms.com/api/SmsSending';
+    private string $baseUrl = 'https://api.mimsms.com/api';
 
     protected function sendSms(): ResponseData
     {
@@ -18,7 +18,7 @@ final class MimsmsDriver extends AbstractDriver
             ->timeout($this->timeout)
             ->retry($this->retry, $this->retryDelay, throw: false)
             ->asJson()
-            ->post('/SMS', [
+            ->post('/SmsSending/SMS', [
                 'UserName' => $this->config['username'],
                 'ApiKey' => $this->config['api_key'],
                 'SenderName' => $this->config['sender_id'],
@@ -45,6 +45,34 @@ final class MimsmsDriver extends AbstractDriver
             success: true,
             data: $data,
         );
+    }
+
+    protected function fetchBalance(): float
+    {
+        $response = Http::baseUrl($this->baseUrl)
+            ->timeout($this->timeout)
+            ->retry($this->retry, $this->retryDelay, throw: false)
+            ->acceptJson()
+            ->asJson()
+            ->post('/V2/BalanceCheck', [
+                'userName' => $this->config['username'],
+                'apiKey' => $this->config['api_key'],
+            ]);
+
+        if ($response->failed()) {
+            throw new BartaException('Mimsms API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('Mimsms API error: Invalid response received');
+        }
+
+        if (isset($data['statusCode']) && (int) $data['statusCode'] !== 200) {
+            throw new BartaException((string) ($data['responseResult'] ?? 'Mimsms API error'));
+        }
+
+        return (float) ($data['balance'] ?? $data['Balance'] ?? $data['data']['balance'] ?? 0.0);
     }
 
     protected function validateConfig(): void

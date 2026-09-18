@@ -14,6 +14,7 @@ use Larament\Barta\Drivers\AbstractDriver;
  * @method static AbstractDriver to(string|array<string> $numbers)
  * @method static AbstractDriver message(string $message)
  * @method static ResponseData send()
+ * @method static float balance()
  * @method static PendingDispatch queue(?string $queue = null, ?string $connection = null)
  * @method static AbstractDriver reset()
  * @method static string getName()

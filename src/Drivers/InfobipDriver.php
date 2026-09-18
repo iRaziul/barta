@@ -57,6 +57,34 @@ final class InfobipDriver extends AbstractDriver
         );
     }
 
+    protected function fetchBalance(): float
+    {
+        $response = Http::baseUrl($this->config['base_url'])
+            ->timeout($this->timeout)
+            ->retry($this->retry, $this->retryDelay, throw: false)
+            ->withBasicAuth($this->config['username'], $this->config['password'])
+            ->acceptJson()
+            ->get('/account/1/balance');
+
+        if ($response->failed()) {
+            $data = $response->json();
+            $error = is_array($data) ? ($data['requestError']['serviceException']['text'] ?? null) : null;
+            throw new BartaException((string) ($error ?? ($response->body() ?: 'Infobip API error: HTTP '.$response->status())));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('Infobip API error: Invalid response received');
+        }
+
+        if (isset($data['requestError'])) {
+            $error = $data['requestError']['serviceException']['text'] ?? 'Infobip API error';
+            throw new BartaException((string) $error);
+        }
+
+        return (float) ($data['balance'] ?? 0.0);
+    }
+
     protected function validateConfig(): void
     {
         if (empty($this->config['base_url'])) {

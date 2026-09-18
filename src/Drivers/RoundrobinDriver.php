@@ -25,6 +25,19 @@ final class RoundrobinDriver extends AbstractDriver
             ->send();
     }
 
+    protected function fetchBalance(): float
+    {
+        $drivers = $this->config['drivers'] ?? [];
+
+        $driverName = $drivers[0] ?? null;
+
+        if (! $driverName) {
+            throw new BartaException('Please configure an array of drivers for Roundrobin in config/barta.php.');
+        }
+
+        return Barta::driver($driverName)->balance();
+    }
+
     protected function validateConfig(): void
     {
         if (empty($this->config['drivers']) || ! is_array($this->config['drivers'])) {

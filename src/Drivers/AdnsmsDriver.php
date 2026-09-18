@@ -48,6 +48,34 @@ final class AdnsmsDriver extends AbstractDriver
         );
     }
 
+    protected function fetchBalance(): float
+    {
+        $response = Http::baseUrl($this->baseUrl)
+            ->timeout($this->timeout)
+            ->retry($this->retry, $this->retryDelay, throw: false)
+            ->acceptJson()
+            ->asForm()
+            ->post('/check-balance', [
+                'api_key' => $this->config['api_key'],
+                'api_secret' => $this->config['api_secret'],
+            ]);
+
+        if ($response->failed()) {
+            throw new BartaException('ADN SMS API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('ADN SMS API error: Invalid response received');
+        }
+
+        if (($data['api_response_code'] ?? 0) !== 200) {
+            throw new BartaException((string) ($data['api_response_message'] ?? 'ADN SMS API error'));
+        }
+
+        return (float) ($data['balance']['sms'] ?? $data['balance'] ?? 0.0);
+    }
+
     protected function validateConfig(): void
     {
         if (empty($this->config['api_key'])) {

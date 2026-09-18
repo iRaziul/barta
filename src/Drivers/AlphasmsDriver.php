@@ -53,6 +53,32 @@ final class AlphasmsDriver extends AbstractDriver
         );
     }
 
+    protected function fetchBalance(): float
+    {
+        $response = Http::baseUrl($this->baseUrl)
+            ->timeout($this->timeout)
+            ->retry($this->retry, $this->retryDelay, throw: false)
+            ->acceptJson()
+            ->get('/user/balance/', [
+                'api_key' => $this->config['api_key'],
+            ]);
+
+        if ($response->failed()) {
+            throw new BartaException('Alpha SMS API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('Alpha SMS API error: Invalid response received');
+        }
+
+        if (($data['error'] ?? 0) !== 0) {
+            throw new BartaException((string) ($data['msg'] ?? 'Alpha SMS API error'));
+        }
+
+        return (float) ($data['data']['balance'] ?? $data['balance'] ?? 0.0);
+    }
+
     protected function validateConfig(): void
     {
         if (empty($this->config['api_key'])) {

@@ -16,6 +16,7 @@ The package is designed to feel native in Laravel projects while keeping gateway
 ## Key Features
 
 - **Multiple Gateways** — Seamlessly switch between SMS providers
+- **Check Balance** — Query account credit across providers for dashboards and alerts
 - **Bulk SMS** — Send to multiple recipients in a single call
 - **Queue Support** — Dispatch SMS to background jobs
 - **Laravel Notifications** — Native integration with Laravel's notification system
@@ -89,6 +90,21 @@ Send to multiple recipients:
 Barta::to(['01712345678', '01812345678'])
     ->message('Hello everyone!')
     ->send();
+```
+
+Check account balance:
+
+```php
+// Check balance on default driver
+$balance = Barta::balance(); // 150.00 (float)
+
+// Check balance on a specific gateway
+$balance = Barta::driver('mimsms')->balance();
+
+// Example: Alert when balance is low
+if (Barta::balance() < 50.0) {
+    // Notify admin to recharge
+}
 ```
 
 > [!TIP]

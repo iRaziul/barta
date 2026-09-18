@@ -28,4 +28,11 @@ final class LogDriver extends AbstractDriver
             ],
         );
     }
+
+    protected function fetchBalance(): float
+    {
+        Log::info('[BARTA] Balance checked');
+
+        return 1000.0;
+    }
 }

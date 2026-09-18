@@ -44,6 +44,37 @@ final class GreenwebDriver extends AbstractDriver
         );
     }
 
+    protected function fetchBalance(): float
+    {
+        $response = Http::baseUrl($this->baseUrl)
+            ->timeout($this->timeout)
+            ->retry($this->retry, $this->retryDelay, throw: false)
+            ->acceptJson()
+            ->get('/g_api.php', [
+                'token' => $this->config['token'],
+                'balance' => '',
+                'json' => '',
+            ]);
+
+        if ($response->failed()) {
+            throw new BartaException('GreenWeb API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('GreenWeb API error: Invalid response received');
+        }
+
+        if (isset($data['error']) || (isset($data[0]) && is_string($data[0]) && str_contains($data[0], 'Error'))) {
+            throw new BartaException((string) ($data['error'] ?? $data[0] ?? 'GreenWeb API error'));
+        }
+
+        /** @var array<string, mixed> $item */
+        $item = isset($data[0]) && is_array($data[0]) ? $data[0] : $data;
+
+        return (float) ($item['balance'] ?? 0.0);
+    }
+
     protected function validateConfig(): void
     {
         if (empty($this->config['token'])) {

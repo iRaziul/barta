@@ -39,6 +39,36 @@ final class ThrowingBartaExceptionDriver extends AbstractDriver
     protected function validateConfig(): void {}
 }
 
+final class BalanceSupportedDriver extends AbstractDriver
+{
+    protected function sendSms(): ResponseData
+    {
+        return new ResponseData(success: true);
+    }
+
+    protected function validateConfig(): void {}
+
+    protected function fetchBalance(): float
+    {
+        return 500.0;
+    }
+}
+
+final class ThrowingBalanceExceptionDriver extends AbstractDriver
+{
+    protected function sendSms(): ResponseData
+    {
+        return new ResponseData(success: true);
+    }
+
+    protected function validateConfig(): void {}
+
+    protected function fetchBalance(): float
+    {
+        throw new RuntimeException('Balance timeout', 504);
+    }
+}
+
 it('throws exception when recipients are missing', function () {
     $driver = new ConcreteDriver;
     $driver->message('Test message')->send();
@@ -125,3 +155,20 @@ it('resets state even when sendSms throws exception', function () {
 
     $driver->message('Second message')->send();
 })->throws(BartaException::class, 'Recipient number is required');
+
+it('throws exception by default when balance check is not implemented', function () {
+    $driver = new ConcreteDriver;
+    $driver->balance();
+})->throws(BartaException::class, 'Balance checking is not supported by [concrete] driver.');
+
+it('can check balance when fetchBalance is implemented', function () {
+    $driver = new BalanceSupportedDriver;
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(500.0);
+});
+
+it('catches generic throwable during balance check and converts to barta exception', function () {
+    $driver = new ThrowingBalanceExceptionDriver;
+    $driver->balance();
+})->throws(BartaException::class, 'Balance timeout');

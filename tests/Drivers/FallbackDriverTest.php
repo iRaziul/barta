@@ -74,3 +74,25 @@ it('throws exception if config missing', function () {
     $driver = new FallbackDriver(config('barta.drivers.fallback'));
     $driver->to('8801700000000')->message('Test')->send();
 })->throws(BartaException::class, 'configure an array of drivers');
+
+it('checks balance successfully using fallback driver', function () {
+    Http::fake([
+        'login.esms.com.bd/*' => Http::response(['status' => 'error', 'message' => 'ESMS failed'], 200),
+        'api.mimsms.com/*' => Http::response(['statusCode' => 200, 'balance' => '750.00'], 200),
+    ]);
+
+    $driver = new FallbackDriver(config('barta.drivers.fallback'));
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(750.0);
+});
+
+it('throws exception if all fallback drivers fail to check balance', function () {
+    Http::fake([
+        'login.esms.com.bd/*' => Http::response(['status' => 'error', 'message' => 'ESMS failed'], 200),
+        'api.mimsms.com/*' => Http::response(['statusCode' => 500], 500),
+    ]);
+
+    $driver = new FallbackDriver(config('barta.drivers.fallback'));
+    $driver->balance();
+})->throws(BartaException::class, 'All fallback drivers failed to fetch balance');

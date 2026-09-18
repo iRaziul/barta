@@ -64,3 +64,20 @@ it('throws exception if config missing', function () {
     $driver = new RoundrobinDriver(config('barta.drivers.roundrobin'));
     $driver->to('8801700000000')->message('Test')->send();
 })->throws(BartaException::class, 'configure an array of drivers');
+
+it('checks balance successfully using roundrobin driver', function () {
+    Http::fake([
+        'login.esms.com.bd/*' => Http::response([
+            'status' => 'success',
+            'data' => [
+                'remaining_balance' => '850.00',
+                'currency' => 'BDT',
+            ],
+        ], 200),
+    ]);
+
+    $driver = new RoundrobinDriver(config('barta.drivers.roundrobin'));
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(850.0);
+});

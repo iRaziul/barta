@@ -45,6 +45,31 @@ final class EsmsDriver extends AbstractDriver
         );
     }
 
+    protected function fetchBalance(): float
+    {
+        $response = Http::baseUrl($this->baseUrl)
+            ->withToken($this->config['api_token'])
+            ->timeout($this->timeout)
+            ->retry($this->retry, $this->retryDelay, throw: false)
+            ->acceptJson()
+            ->get('/balance');
+
+        if ($response->failed()) {
+            throw new BartaException('ESMS API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('ESMS API error: Invalid response received');
+        }
+
+        if (($data['status'] ?? '') === 'error') {
+            throw new BartaException((string) ($data['message'] ?? 'ESMS API error'));
+        }
+
+        return (float) ($data['data']['remaining_balance'] ?? $data['data']['balance'] ?? $data['balance'] ?? 0.0);
+    }
+
     protected function validateConfig(): void
     {
         if (empty($this->config['sender_id'])) {

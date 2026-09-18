@@ -22,4 +22,9 @@ final class BartaException extends Exception
     {
         return new self('Message content is required. Call ->message() before ->send().');
     }
+
+    public static function unsupportedBalanceCheck(string $driver): self
+    {
+        return new self("Balance checking is not supported by [{$driver}] driver.");
+    }
 }

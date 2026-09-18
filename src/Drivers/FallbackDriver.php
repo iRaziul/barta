@@ -32,6 +32,24 @@ final class FallbackDriver extends AbstractDriver
         throw new BartaException('All fallback drivers failed. Errors: '.implode(', ', $exceptions));
     }
 
+    protected function fetchBalance(): float
+    {
+        $drivers = $this->config['drivers'] ?? [];
+        $exceptions = [];
+
+        foreach ($drivers as $driverName) {
+            try {
+                return Barta::driver($driverName)->balance();
+            } catch (Throwable $e) {
+                $exceptions[] = "[{$driverName}]: ".$e->getMessage();
+
+                continue;
+            }
+        }
+
+        throw new BartaException('All fallback drivers failed to fetch balance. Errors: '.implode(', ', $exceptions));
+    }
+
     protected function validateConfig(): void
     {
         if (empty($this->config['drivers']) || ! is_array($this->config['drivers'])) {

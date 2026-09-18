@@ -111,3 +111,29 @@ it('throws BartaException on non-json response', function () {
     $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
     $driver->to('8801700000000')->message('Test message')->send();
 })->throws(BartaException::class, 'Invalid response received');
+
+it('checks balance successfully with mimsms driver', function () {
+    Http::fake([
+        'https://api.mimsms.com/*' => Http::response([
+            'statusCode' => 200,
+            'balance' => '500.00',
+        ], 200),
+    ]);
+
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(500.0);
+});
+
+it('throws exception on mimsms balance check error', function () {
+    Http::fake([
+        'https://api.mimsms.com/*' => Http::response([
+            'statusCode' => 401,
+            'responseResult' => 'Authentication failed',
+        ], 200),
+    ]);
+
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
+    $driver->balance();
+})->throws(BartaException::class, 'Authentication failed');

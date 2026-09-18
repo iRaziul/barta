@@ -40,3 +40,10 @@ it('returns successful response when sending', function () {
     expect($response->success)->toBeTrue();
     expect($response->data)->toHaveKey('message');
 });
+
+it('returns simulated balance when checking balance', function () {
+    $driver = new LogDriver;
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(1000.0);
+});

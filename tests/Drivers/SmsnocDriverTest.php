@@ -84,3 +84,32 @@ it('throws BartaException if sender_id is missing for smsnoc driver', function (
     $driver = new SmsnocDriver(config('barta.drivers.smsnoc'));
     $driver->to('8801700000000')->message('Test message')->send();
 })->throws(BartaException::class, 'Please set sender_id for smsnoc in config/barta.php.');
+
+it('checks balance successfully with smsnoc driver', function () {
+    Http::fake([
+        'https://app.smsnoc.com/api/v3/balance*' => Http::response([
+            'status' => 'success',
+            'data' => [
+                'remaining_balance' => '450.00',
+                'currency' => 'BDT',
+            ],
+        ], 200),
+    ]);
+
+    $driver = new SmsnocDriver(config('barta.drivers.smsnoc'));
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(450.0);
+});
+
+it('throws exception on smsnoc balance check error', function () {
+    Http::fake([
+        'https://app.smsnoc.com/api/v3/balance*' => Http::response([
+            'status' => 'error',
+            'message' => 'Unauthorized',
+        ], 200),
+    ]);
+
+    $driver = new SmsnocDriver(config('barta.drivers.smsnoc'));
+    $driver->balance();
+})->throws(BartaException::class, 'Unauthorized');

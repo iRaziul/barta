@@ -101,3 +101,32 @@ it('throws exception if sender_id missing', function () {
     $driver = new InfobipDriver(config('barta.drivers.infobip'));
     $driver->to('8801700000000')->message('Test')->send();
 })->throws(BartaException::class, 'sender_id');
+
+it('checks balance successfully with infobip driver', function () {
+    Http::fake([
+        'https://api.infobip.com/account/1/balance*' => Http::response([
+            'balance' => 125.50,
+            'currency' => 'EUR',
+        ], 200),
+    ]);
+
+    $driver = new InfobipDriver(config('barta.drivers.infobip'));
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(125.50);
+});
+
+it('throws exception on infobip balance check error', function () {
+    Http::fake([
+        'https://api.infobip.com/account/1/balance*' => Http::response([
+            'requestError' => [
+                'serviceException' => [
+                    'text' => 'Invalid credentials',
+                ],
+            ],
+        ], 401),
+    ]);
+
+    $driver = new InfobipDriver(config('barta.drivers.infobip'));
+    $driver->balance();
+})->throws(BartaException::class, 'Invalid credentials');

@@ -44,3 +44,11 @@ it('can send sms using the Barta facade with esms driver', function () {
                $request['message'] === 'Facade Test Message';
     });
 });
+
+it('can check balance using the Barta facade with log driver', function () {
+    config()->set('barta.default', 'log');
+
+    $balance = Barta::balance();
+
+    expect($balance)->toBe(1000.0);
+});

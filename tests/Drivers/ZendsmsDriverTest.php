@@ -134,3 +134,34 @@ it('throws BartaException on non-json response', function () {
     $driver = new ZendsmsDriver(config('barta.drivers.zendsms'));
     $driver->to('8801700000000')->message('Test message')->send();
 })->throws(BartaException::class, 'Invalid response received');
+
+it('checks balance successfully with zendsms driver', function () {
+    Http::fake([
+        'https://api.zendsms.com/api/v1/balance' => Http::response([
+            'success' => true,
+            'code' => 1000,
+            'data' => [
+                'balance' => 1250.5,
+                'currency' => 'BDT',
+            ],
+        ], 200),
+    ]);
+
+    $driver = new ZendsmsDriver(config('barta.drivers.zendsms'));
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(1250.5);
+});
+
+it('throws exception on zendsms balance check error', function () {
+    Http::fake([
+        'https://api.zendsms.com/api/v1/balance' => Http::response([
+            'success' => false,
+            'code' => 2001,
+            'message' => 'Invalid API key',
+        ], 401),
+    ]);
+
+    $driver = new ZendsmsDriver(config('barta.drivers.zendsms'));
+    $driver->balance();
+})->throws(BartaException::class, 'Invalid API key');

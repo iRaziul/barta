@@ -50,6 +50,22 @@ abstract class AbstractDriver
     abstract protected function validateConfig(): void;
 
     /**
+     * Get the account balance.
+     */
+    final public function balance(): float
+    {
+        $this->validateConfig();
+
+        try {
+            return $this->fetchBalance();
+        } catch (BartaException $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            throw new BartaException($e->getMessage(), (int) $e->getCode(), $e);
+        }
+    }
+
+    /**
      * Send the message.
      */
     final public function send(): ResponseData
@@ -137,6 +153,14 @@ abstract class AbstractDriver
             ->before('Driver')
             ->lower()
             ->toString();
+    }
+
+    /**
+     * Driver-specific balance implementation.
+     */
+    protected function fetchBalance(): float
+    {
+        throw BartaException::unsupportedBalanceCheck($this->getName());
     }
 
     /**

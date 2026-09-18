@@ -43,3 +43,32 @@ it('throws exception if api_key missing', function () {
     $driver = new AlphasmsDriver(config('barta.drivers.alphasms'));
     $driver->to('8801700000000')->message('Test')->send();
 })->throws(BartaException::class, 'api_key');
+
+it('checks balance successfully with alpha driver', function () {
+    Http::fake([
+        'https://api.sms.net.bd/user/balance/*' => Http::response([
+            'error' => 0,
+            'msg' => 'Success',
+            'data' => [
+                'balance' => '150.50',
+            ],
+        ], 200),
+    ]);
+
+    $driver = new AlphasmsDriver(config('barta.drivers.alphasms'));
+    $balance = $driver->balance();
+
+    expect($balance)->toBe(150.50);
+});
+
+it('throws exception on alpha balance check error', function () {
+    Http::fake([
+        'https://api.sms.net.bd/user/balance/*' => Http::response([
+            'error' => 1,
+            'msg' => 'Invalid API key',
+        ], 200),
+    ]);
+
+    $driver = new AlphasmsDriver(config('barta.drivers.alphasms'));
+    $driver->balance();
+})->throws(BartaException::class, 'Invalid API key');
