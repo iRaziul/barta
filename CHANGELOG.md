@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.5.1 - 2026-09-18
+
+### Changed
+
+- Removed `spatie/laravel-package-tools` and switched to a native Laravel service provider
+- Updated composer script shortcuts and README
+
+**Full Changelog**: https://github.com/iRaziul/barta/compare/v1.5.0...v1.5.1
+
 ## v1.5.0 - 2026-09-18
 
 ### Added
