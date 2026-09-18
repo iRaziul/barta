@@ -7,31 +7,34 @@ namespace Larament\Barta;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\ServiceProvider;
 use Larament\Barta\Commands\InstallBartaCommand;
 use Larament\Barta\Notifications\BartaChannel;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-final class BartaServiceProvider extends PackageServiceProvider
+final class BartaServiceProvider extends ServiceProvider
 {
-    public function configurePackage(Package $package): void
+    public function register(): void
     {
-        $package
-            ->name('barta')
-            ->hasConfigFile()
-            ->hasCommand(InstallBartaCommand::class);
-    }
+        $this->mergeConfigFrom(__DIR__.'/../config/barta.php', 'barta');
 
-    public function packageRegistered(): void
-    {
         $this->app->singleton(
             BartaManager::class,
             fn (Container $container) => new BartaManager($container)
         );
     }
 
-    public function packageBooted(): void
+    public function boot(): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/barta.php' => config_path('barta.php'),
+            ], 'barta-config');
+
+            $this->commands([
+                InstallBartaCommand::class,
+            ]);
+        }
+
         Notification::resolved(function (ChannelManager $channel): void {
             $channel->extend('barta', fn ($app) => $app->make(BartaChannel::class));
         });

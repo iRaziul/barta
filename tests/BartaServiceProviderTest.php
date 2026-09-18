@@ -22,3 +22,8 @@ it('registers the barta notification channel in the ChannelManager', function ()
 
     expect($channel)->toBeInstanceOf(BartaChannel::class);
 });
+
+it('merges default barta configuration', function () {
+    expect(config('barta'))->toBeArray()
+        ->and(config('barta.default'))->not->toBeNull();
+});
