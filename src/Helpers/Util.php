@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Larament\Barta\Helpers;
 
-use Illuminate\Support\Str;
 use Larament\Barta\Exceptions\BartaException;
 
 final class Util
@@ -16,17 +15,12 @@ final class Util
      */
     public static function formatPhoneNumber(string $number): string
     {
-        $phone = Str::of($number)
-            ->replaceMatches('/\D/', '')
-            ->ltrim('88')
-            ->ltrim('0')
-            ->prepend('880')
-            ->toString();
+        $digits = (string) preg_replace('/\D/', '', $number);
 
-        if (! preg_match('/^8801[3-9][0-9]{8}$/', $phone)) {
-            throw BartaException::invalidNumber($number);
+        if (preg_match('/^(?:00880|880|0)?(1[3-9]\d{8})$/', $digits, $matches)) {
+            return '880'.$matches[1];
         }
 
-        return $phone;
+        throw BartaException::invalidNumber($number);
     }
 }
