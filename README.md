@@ -164,7 +164,7 @@ The full documentation lives at [barta.larament.com](https://barta.larament.com)
 
 ```bash
 composer test          # Run tests
-composer test-coverage # With coverage
+composer test:coverage # With coverage
 composer analyse       # Static analysis
 ```
 
