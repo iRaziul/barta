@@ -14,7 +14,7 @@ final class InfobipDriver extends AbstractDriver
     {
         $response = Http::baseUrl($this->config['base_url'])
             ->timeout($this->timeout)
-            ->retry($this->retry, $this->retryDelay)
+            ->retry($this->retry, $this->retryDelay, throw: false)
             ->withBasicAuth($this->config['username'], $this->config['password'])
             ->acceptJson()
             ->asJson()
@@ -29,21 +29,31 @@ final class InfobipDriver extends AbstractDriver
                         'text' => $this->message,
                     ],
                 ],
-            ])
-            ->json();
+            ]);
 
-        $status = $response['messages'][0]['status']['groupName'] ?? null;
+        if ($response->failed()) {
+            $data = $response->json();
+            $error = is_array($data) ? ($data['requestError']['serviceException']['text'] ?? null) : null;
+            throw new BartaException((string) ($error ?? ($response->body() ?: 'Infobip API error: HTTP '.$response->status())));
+        }
 
-        if ($status === 'REJECTED' || isset($response['requestError'])) {
-            $error = $response['requestError']['serviceException']['text']
-                ?? $response['messages'][0]['status']['description']
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('Infobip API error: Invalid response received');
+        }
+
+        $status = $data['messages'][0]['status']['groupName'] ?? null;
+
+        if ($status === 'REJECTED' || isset($data['requestError'])) {
+            $error = $data['requestError']['serviceException']['text']
+                ?? $data['messages'][0]['status']['description']
                 ?? 'Infobip API error';
-            throw new BartaException($error);
+            throw new BartaException((string) $error);
         }
 
         return new ResponseData(
-            success: in_array($status, ['PENDING', 'SENT', 'DELIVERED']),
-            data: $response,
+            success: in_array($status, ['PENDING', 'SENT', 'DELIVERED'], true),
+            data: $data,
         );
     }
 

@@ -27,16 +27,24 @@ final class AdnsmsDriver extends AbstractDriver
                 'senderid' => $this->config['sender_id'] ?? null,
                 'mobile' => implode(',', $this->recipients),
                 'message_body' => $this->message,
-            ])
-            ->json();
+            ]);
 
-        if (($response['api_response_code'] ?? 0) !== 200) {
-            throw new BartaException($response['api_response_message'] ?? 'ADN SMS API error');
+        if ($response->failed()) {
+            throw new BartaException('ADN SMS API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('ADN SMS API error: Invalid response received');
+        }
+
+        if (($data['api_response_code'] ?? 0) !== 200) {
+            throw new BartaException((string) ($data['api_response_message'] ?? 'ADN SMS API error'));
         }
 
         return new ResponseData(
             success: true,
-            data: $response,
+            data: $data,
         );
     }
 

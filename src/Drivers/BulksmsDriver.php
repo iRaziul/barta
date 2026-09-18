@@ -16,21 +16,29 @@ final class BulksmsDriver extends AbstractDriver
     {
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
-            ->retry($this->retry, $this->retryDelay)
+            ->retry($this->retry, $this->retryDelay, throw: false)
             ->get('/smsapi', [
                 'api_key' => $this->config['api_key'],
                 'senderid' => $this->config['sender_id'],
                 'type' => 'text',
                 'number' => implode(',', $this->recipients),
                 'message' => $this->message,
-            ])
-            ->json();
+            ]);
 
-        if (($response['response_code'] ?? 0) !== 202) {
-            throw new BartaException($response['error_message'] ?? 'BulkSMS BD API error');
+        if ($response->failed()) {
+            throw new BartaException('BulkSMS BD API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
         }
 
-        return new ResponseData(success: true, data: $response);
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('BulkSMS BD API error: Invalid response received');
+        }
+
+        if (($data['response_code'] ?? 0) !== 202) {
+            throw new BartaException((string) ($data['error_message'] ?? 'BulkSMS BD API error'));
+        }
+
+        return new ResponseData(success: true, data: $data);
     }
 
     protected function validateConfig(): void

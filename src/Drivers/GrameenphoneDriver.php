@@ -16,7 +16,7 @@ final class GrameenphoneDriver extends AbstractDriver
     {
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
-            ->retry($this->retry, $this->retryDelay)
+            ->retry($this->retry, $this->retryDelay, throw: false)
             ->acceptJson()
             ->asJson()
             ->post('', [
@@ -29,18 +29,26 @@ final class GrameenphoneDriver extends AbstractDriver
                 'messagetype' => $this->config['message_type'] ?? 1, // 1=Text, 2=Flash, 3=Unicode
                 'messageid' => 0,
                 'message' => $this->message,
-            ])
-            ->json();
+            ]);
 
-        $statusCode = $response['statusCode'] ?? null;
+        if ($response->failed()) {
+            throw new BartaException('Grameenphone API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('Grameenphone API error: Invalid response received');
+        }
+
+        $statusCode = $data['statusCode'] ?? null;
 
         if ($statusCode !== 200 && $statusCode !== '200') {
-            throw new BartaException($response['statusDescription'] ?? 'Grameenphone API error');
+            throw new BartaException((string) ($data['statusDescription'] ?? 'Grameenphone API error'));
         }
 
         return new ResponseData(
             success: true,
-            data: $response,
+            data: $data,
         );
     }
 

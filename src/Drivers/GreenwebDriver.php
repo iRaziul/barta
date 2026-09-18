@@ -16,23 +16,31 @@ final class GreenwebDriver extends AbstractDriver
     {
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
-            ->retry($this->retry, $this->retryDelay)
+            ->retry($this->retry, $this->retryDelay, throw: false)
             ->acceptJson()
             ->get('/api.php', [
                 'json' => '',
                 'token' => $this->config['token'],
                 'to' => implode(',', $this->recipients),
                 'message' => $this->message,
-            ])
-            ->json();
+            ]);
 
-        if (isset($response['error']) || (isset($response[0]) && str_contains($response[0], 'Error'))) {
-            throw new BartaException($response['error'] ?? $response[0] ?? 'GreenWeb API error');
+        if ($response->failed()) {
+            throw new BartaException('GreenWeb API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('GreenWeb API error: Invalid response received');
+        }
+
+        if (isset($data['error']) || (isset($data[0]) && is_string($data[0]) && str_contains($data[0], 'Error'))) {
+            throw new BartaException((string) ($data['error'] ?? $data[0] ?? 'GreenWeb API error'));
         }
 
         return new ResponseData(
             success: true,
-            data: $response,
+            data: $data,
         );
     }
 

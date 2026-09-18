@@ -30,18 +30,26 @@ final class AlphasmsDriver extends AbstractDriver
 
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
-            ->retry($this->retry, $this->retryDelay)
+            ->retry($this->retry, $this->retryDelay, throw: false)
             ->acceptJson()
-            ->post('/sendsms', $params)
-            ->json();
+            ->post('/sendsms', $params);
 
-        if (($response['error'] ?? 0) !== 0) {
-            throw new BartaException($response['msg'] ?? 'Alpha SMS API error');
+        if ($response->failed()) {
+            throw new BartaException('Alpha SMS API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('Alpha SMS API error: Invalid response received');
+        }
+
+        if (($data['error'] ?? 0) !== 0) {
+            throw new BartaException((string) ($data['msg'] ?? 'Alpha SMS API error'));
         }
 
         return new ResponseData(
-            success: ($response['error'] ?? 1) === 0,
-            data: $response,
+            success: ($data['error'] ?? 1) === 0,
+            data: $data,
         );
     }
 

@@ -10,6 +10,7 @@ use Larament\Barta\Data\ResponseData;
 use Larament\Barta\Exceptions\BartaException;
 use Larament\Barta\Helpers\Util;
 use Larament\Barta\Jobs\SendSmsJob;
+use Throwable;
 
 abstract class AbstractDriver
 {
@@ -25,15 +26,17 @@ abstract class AbstractDriver
 
     /**
      * Create a new driver instance.
+     *
+     * @param  array<string, mixed>  $config
      */
     public function __construct(
         protected array $config = [],
     ) {
-        [
-            'timeout' => $this->timeout,
-            'retry' => $this->retry,
-            'retry_delay' => $this->retryDelay,
-        ] = config('barta.request');
+        $requestConfig = (array) config('barta.request', []);
+
+        $this->timeout = (int) ($requestConfig['timeout'] ?? 10);
+        $this->retry = (int) ($requestConfig['retry'] ?? 3);
+        $this->retryDelay = (int) ($requestConfig['retry_delay'] ?? 300);
     }
 
     /**
@@ -53,7 +56,15 @@ abstract class AbstractDriver
     {
         $this->validate();
 
-        return $this->sendSms();
+        try {
+            return $this->sendSms();
+        } catch (BartaException $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            throw new BartaException($e->getMessage(), (int) $e->getCode(), $e);
+        } finally {
+            $this->reset();
+        }
     }
 
     /**
@@ -63,16 +74,31 @@ abstract class AbstractDriver
     {
         $this->validate();
 
-        $job = new SendSmsJob(
-            driver: $this->getDriverName(),
-            recipients: $this->recipients,
-            message: $this->message,
-        );
+        try {
+            $job = new SendSmsJob(
+                driver: $this->getName(),
+                recipients: $this->recipients,
+                message: $this->message,
+            );
 
-        $job->onQueue($queue)
-            ->onConnection($connection);
+            $job->onQueue($queue)
+                ->onConnection($connection);
 
-        return dispatch($job);
+            return dispatch($job);
+        } finally {
+            $this->reset();
+        }
+    }
+
+    /**
+     * Reset the driver state after sending or queueing.
+     */
+    final public function reset(): self
+    {
+        $this->recipients = [];
+        $this->message = '';
+
+        return $this;
     }
 
     /**
@@ -101,9 +127,9 @@ abstract class AbstractDriver
     }
 
     /**
-     * Get the driver name for queue purposes.
+     * Get the driver name.
      */
-    private function getDriverName(): string
+    final public function getName(): string
     {
         $className = class_basename(static::class);
 

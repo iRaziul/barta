@@ -16,7 +16,7 @@ final class BanglalinkDriver extends AbstractDriver
     {
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
-            ->retry($this->retry, $this->retryDelay)
+            ->retry($this->retry, $this->retryDelay, throw: false)
             ->asForm()
             ->post('/sendSMS', [
                 'userID' => $this->config['user_id'],
@@ -25,6 +25,10 @@ final class BanglalinkDriver extends AbstractDriver
                 'msisdn' => implode(',', $this->recipients),
                 'message' => $this->message,
             ]);
+
+        if ($response->failed()) {
+            throw new BartaException('Banglalink API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
 
         $body = $response->body();
 

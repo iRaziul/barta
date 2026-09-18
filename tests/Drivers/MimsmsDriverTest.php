@@ -93,3 +93,21 @@ it('throws BartaException if sender_id is missing for mimsms driver', function (
     $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
     $driver->to('8801700000000')->message('Test message')->send();
 })->throws(BartaException::class, 'Please set sender_id for Mimsms in config/barta.php.');
+
+it('throws BartaException on http error', function () {
+    Http::fake([
+        'https://api.mimsms.com/*' => Http::response('Gateway Timeout', 504),
+    ]);
+
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
+    $driver->to('8801700000000')->message('Test message')->send();
+})->throws(BartaException::class);
+
+it('throws BartaException on non-json response', function () {
+    Http::fake([
+        'https://api.mimsms.com/*' => Http::response('Plain text error', 200),
+    ]);
+
+    $driver = new MimsmsDriver(config('barta.drivers.mimsms'));
+    $driver->to('8801700000000')->message('Test message')->send();
+})->throws(BartaException::class, 'Invalid response received');

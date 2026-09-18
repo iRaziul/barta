@@ -16,7 +16,7 @@ final class RobiDriver extends AbstractDriver
     {
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
-            ->retry($this->retry, $this->retryDelay)
+            ->retry($this->retry, $this->retryDelay, throw: false)
             ->asForm()
             ->post('/SendTextMessage', [
                 'username' => $this->config['username'],
@@ -24,6 +24,10 @@ final class RobiDriver extends AbstractDriver
                 'To' => implode(',', $this->recipients),
                 'Message' => $this->message,
             ]);
+
+        if ($response->failed()) {
+            throw new BartaException('Robi API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
 
         $body = $response->body();
 

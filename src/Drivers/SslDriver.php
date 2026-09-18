@@ -18,7 +18,7 @@ final class SslDriver extends AbstractDriver
 
         $response = Http::baseUrl($this->baseUrl)
             ->timeout($this->timeout)
-            ->retry($this->retry, $this->retryDelay)
+            ->retry($this->retry, $this->retryDelay, throw: false)
             ->acceptJson()
             ->asJson()
             ->post($endpoint, [
@@ -27,16 +27,24 @@ final class SslDriver extends AbstractDriver
                 'msisdn' => implode(',', $this->recipients),
                 'sms' => $this->message,
                 'csms_id' => $this->config['csms_id'] ?? uniqid('barta_'),
-            ])
-            ->json();
+            ]);
 
-        if (($response['status'] ?? '') === 'FAILED' || isset($response['error'])) {
-            throw new BartaException($response['error'] ?? $response['status_message'] ?? 'SSL Wireless API error');
+        if ($response->failed()) {
+            throw new BartaException('SSL Wireless API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        $data = $response->json();
+        if (! is_array($data)) {
+            throw new BartaException('SSL Wireless API error: Invalid response received');
+        }
+
+        if (($data['status'] ?? '') === 'FAILED' || isset($data['error'])) {
+            throw new BartaException((string) ($data['error'] ?? $data['status_message'] ?? 'SSL Wireless API error'));
         }
 
         return new ResponseData(
-            success: ($response['status'] ?? '') === 'SUCCESS',
-            data: $response,
+            success: ($data['status'] ?? '') === 'SUCCESS',
+            data: $data,
         );
     }
 

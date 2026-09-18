@@ -84,3 +84,21 @@ it('throws BartaException if api_token is missing for esms driver', function () 
     $driver = new EsmsDriver(config('barta.drivers.esms'));
     $driver->to('8801700000000')->message('Test message')->send();
 })->throws(BartaException::class, 'Please set api_token for ESMS in config/barta.php.');
+
+it('throws BartaException on http error', function () {
+    Http::fake([
+        'https://login.esms.com.bd/*' => Http::response('Internal Server Error', 500),
+    ]);
+
+    $driver = new EsmsDriver(config('barta.drivers.esms'));
+    $driver->to('8801700000000')->message('Test message')->send();
+})->throws(BartaException::class);
+
+it('throws BartaException on non-json response', function () {
+    Http::fake([
+        'https://login.esms.com.bd/*' => Http::response('<html>Error</html>', 200),
+    ]);
+
+    $driver = new EsmsDriver(config('barta.drivers.esms'));
+    $driver->to('8801700000000')->message('Test message')->send();
+})->throws(BartaException::class, 'Invalid response received');

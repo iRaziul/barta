@@ -103,8 +103,5 @@ it('job sends sms with log driver when handled', function () {
 it('gets correct driver name from driver class', function () {
     $driver = new LogDriver;
 
-    $reflection = new ReflectionClass($driver);
-    $method = $reflection->getMethod('getDriverName');
-
-    expect($method->invoke($driver))->toBe('log');
+    expect($driver->getName())->toBe('log');
 });

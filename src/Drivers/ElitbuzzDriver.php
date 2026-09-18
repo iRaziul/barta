@@ -12,16 +12,22 @@ final class ElitbuzzDriver extends AbstractDriver
 {
     protected function sendSms(): ResponseData
     {
+        $url = mb_rtrim((string) ($this->config['url'] ?? ''), '/').'/smsapi';
+
         $response = Http::timeout($this->timeout)
-            ->retry($this->retry, $this->retryDelay)
+            ->retry($this->retry, $this->retryDelay, throw: false)
             ->asForm()
-            ->post($this->config['url'].'/smsapi', [
+            ->post($url, [
                 'api_key' => $this->config['api_key'],
                 'type' => $this->config['type'] ?? 'text',
                 'senderid' => $this->config['sender_id'],
                 'contacts' => implode(',', $this->recipients),
                 'msg' => $this->message,
             ]);
+
+        if ($response->failed()) {
+            throw new BartaException('ElitBuzz API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
 
         $body = $response->body();
 
