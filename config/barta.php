@@ -82,6 +82,10 @@ return [
             'api_token' => env('BARTA_SMSNOC_TOKEN'),
             'sender_id' => env('BARTA_SMSNOC_SENDER_ID'),
         ],
+        'zendsms' => [
+            'api_key' => env('BARTA_ZENDSMS_API_KEY'),
+            'sender_id' => env('BARTA_ZENDSMS_SENDER_ID'),
+        ],
         'fallback' => [
             'drivers' => ['mimsms', 'esms'],
         ],

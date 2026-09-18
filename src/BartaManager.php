@@ -21,6 +21,7 @@ use Larament\Barta\Drivers\RobiDriver;
 use Larament\Barta\Drivers\RoundrobinDriver;
 use Larament\Barta\Drivers\SmsnocDriver;
 use Larament\Barta\Drivers\SslDriver;
+use Larament\Barta\Drivers\ZendsmsDriver;
 
 final class BartaManager extends Manager
 {
@@ -97,6 +98,11 @@ final class BartaManager extends Manager
     protected function createSmsnocDriver(): SmsnocDriver
     {
         return new SmsnocDriver($this->config->get('barta.drivers.smsnoc'));
+    }
+
+    protected function createZendsmsDriver(): ZendsmsDriver
+    {
+        return new ZendsmsDriver($this->config->get('barta.drivers.zendsms'));
     }
 
     protected function createFallbackDriver(): FallbackDriver

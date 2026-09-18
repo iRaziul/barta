@@ -13,7 +13,7 @@ Laravel package for sending SMS via various Bangladeshi SMS gateways with a unif
 ### Drivers
 
 Barta supports many BD gateways:
-- `esms`, `mimsms`, `ssl`, `grameenphone`, `banglalink`, `robi`, `adnsms`, `alphasms`, `greenweb`, `bulksms`, `elitbuzz`, `smsnoc`, `infobip`.
+- `esms`, `mimsms`, `ssl`, `grameenphone`, `banglalink`, `robi`, `adnsms`, `alphasms`, `greenweb`, `bulksms`, `elitbuzz`, `smsnoc`, `infobip`, `zendsms`.
 - `log` - Logs SMS to application logs (useful for local development).
 - `fallback` - Tries a list of drivers until one succeeds.
 - `roundrobin` - Cycles through drivers to distribute load.

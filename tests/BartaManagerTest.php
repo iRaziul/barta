@@ -6,6 +6,7 @@ use Larament\Barta\BartaManager;
 use Larament\Barta\Drivers\EsmsDriver;
 use Larament\Barta\Drivers\LogDriver;
 use Larament\Barta\Drivers\MimsmsDriver;
+use Larament\Barta\Drivers\ZendsmsDriver;
 
 it('can resolve the manager from the container', function () {
     $manager = app(BartaManager::class);
@@ -42,6 +43,17 @@ it('can create a mimsms driver', function () {
     $driver = $manager->driver('mimsms');
 
     expect($driver)->toBeInstanceOf(MimsmsDriver::class);
+});
+
+it('can create a zendsms driver', function () {
+    config()->set('barta.drivers.zendsms.api_key', 'test_key');
+    config()->set('barta.drivers.zendsms.sender_id', 'test_sender_id');
+
+    $manager = app(BartaManager::class);
+
+    $driver = $manager->driver('zendsms');
+
+    expect($driver)->toBeInstanceOf(ZendsmsDriver::class);
 });
 
 it('returns the default driver', function () {
