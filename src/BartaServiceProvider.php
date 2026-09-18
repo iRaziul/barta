@@ -20,12 +20,18 @@ final class BartaServiceProvider extends PackageServiceProvider
             ->name('barta')
             ->hasConfigFile()
             ->hasCommand(InstallBartaCommand::class);
+    }
 
+    public function packageRegistered(): void
+    {
         $this->app->singleton(
             BartaManager::class,
             fn (Container $container) => new BartaManager($container)
         );
+    }
 
+    public function packageBooted(): void
+    {
         Notification::resolved(function (ChannelManager $channel): void {
             $channel->extend('barta', fn ($app) => $app->make(BartaChannel::class));
         });
