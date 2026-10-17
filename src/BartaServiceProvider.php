@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Larament\Barta;
 
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
@@ -17,10 +16,7 @@ final class BartaServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/barta.php', 'barta');
 
-        $this->app->singleton(
-            BartaManager::class,
-            fn (Container $container) => new BartaManager($container)
-        );
+        $this->app->singleton(BartaManager::class);
     }
 
     public function boot(): void
