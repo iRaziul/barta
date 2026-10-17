@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.5.2 - 2026-10-17
+
+### What’s Changed
+
+- Fixed SMSNOC driver compatibility with the current API for sending SMS and checking balance (#13).
+- Simplified BartaManager singleton registration in the Laravel service provider.
+
+**Full Changelog**: https://github.com/iRaziul/barta/compare/v1.5.1...v1.5.2
+
 ## v1.5.1 - 2026-09-18
 
 ### Changed
