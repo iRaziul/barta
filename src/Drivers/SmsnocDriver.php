@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Larament\Barta\Drivers;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Larament\Barta\Data\ResponseData;
 use Larament\Barta\Exceptions\BartaException;
 
 final class SmsnocDriver extends AbstractDriver
 {
-    private string $baseUrl = 'https://app.smsnoc.com/api/v3';
+    private string $baseUrl = 'https://smsnoc.com/api/v1';
 
     protected function sendSms(): ResponseData
     {
@@ -19,28 +20,21 @@ final class SmsnocDriver extends AbstractDriver
             ->timeout($this->timeout)
             ->retry($this->retry, $this->retryDelay, throw: false)
             ->acceptJson()
-            ->post('/sms/send', [
-                'recipient' => implode(',', $this->recipients),
+            ->asJson()
+            ->post('/send-sms', [
+                'to' => $this->recipients,
                 'sender_id' => $this->config['sender_id'],
-                'type' => 'plain',
                 'message' => $this->message,
             ]);
 
-        if ($response->failed()) {
-            throw new BartaException('smsnoc API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
-        }
+        $data = $this->decode($response);
 
-        $data = $response->json();
-        if (! is_array($data)) {
-            throw new BartaException('smsnoc API error: Invalid response received');
-        }
-
-        if (($data['status'] ?? '') === 'error') {
-            throw new BartaException((string) ($data['message'] ?? 'smsnoc API error'));
+        if (($data['status'] ?? '') !== 'success') {
+            throw new BartaException($this->errorMessage($data, $response));
         }
 
         return new ResponseData(
-            success: ($data['status'] ?? '') === 'success',
+            success: true,
             data: $data,
         );
     }
@@ -54,20 +48,13 @@ final class SmsnocDriver extends AbstractDriver
             ->acceptJson()
             ->get('/balance');
 
-        if ($response->failed()) {
-            throw new BartaException('smsnoc API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        $data = $this->decode($response);
+
+        if (($data['success'] ?? false) !== true) {
+            throw new BartaException($this->errorMessage($data, $response));
         }
 
-        $data = $response->json();
-        if (! is_array($data)) {
-            throw new BartaException('smsnoc API error: Invalid response received');
-        }
-
-        if (($data['status'] ?? '') === 'error') {
-            throw new BartaException((string) ($data['message'] ?? 'smsnoc API error'));
-        }
-
-        return (float) ($data['data']['remaining_balance'] ?? $data['data']['balance'] ?? $data['balance'] ?? 0.0);
+        return (float) ($data['balance'] ?? 0.0);
     }
 
     protected function validateConfig(): void
@@ -79,5 +66,33 @@ final class SmsnocDriver extends AbstractDriver
         if (empty($this->config['sender_id'])) {
             throw new BartaException('Please set sender_id for smsnoc in config/barta.php.');
         }
+    }
+
+    /**
+     * SMSNOC answers errors with a JSON body too (e.g. 401 Authentication failed), so read it whatever the status.
+     *
+     * @return array<string, mixed>
+     */
+    private function decode(Response $response): array
+    {
+        $data = $response->json();
+
+        if (! is_array($data)) {
+            throw new BartaException('smsnoc API error: '.($response->body() ?: 'HTTP request failed with status '.$response->status()));
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function errorMessage(array $data, Response $response): string
+    {
+        $message = $data['message'] ?? $data['error'] ?? null;
+
+        return is_string($message) && $message !== ''
+            ? $message
+            : 'smsnoc API error: HTTP request failed with status '.$response->status();
     }
 }
